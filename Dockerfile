@@ -26,18 +26,10 @@ COPY . .
 # Copy built frontend from Stage 1
 COPY --from=frontend /app/public/build ./public/build
 
-# Laravel setup
-COPY .env.example .env
-RUN php artisan key:generate
-
-# Permissions for storage & cache
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Clear caches
+# Laravel setup
 RUN php artisan config:clear && \
     php artisan route:clear && \
     php artisan view:clear
