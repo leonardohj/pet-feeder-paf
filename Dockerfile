@@ -34,4 +34,13 @@ RUN php artisan config:clear && \
     php artisan route:clear && \
     php artisan view:clear
 
-CMD ["php-fpm"]
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy Supervisor config
+COPY ./docker/supervisor/laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+
+# Expose HTTP port
+EXPOSE 80
+
+# Start Supervisor (which runs PHP-FPM + Queue workers)
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
