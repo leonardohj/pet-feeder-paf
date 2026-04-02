@@ -14,5 +14,8 @@ export default defineConfig({
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        host: '0.0.0.0',  // listen on all interfaces
+        port: 5173,        // optional, default Vite port
+        strictPort: true,
     },
 });
