@@ -1,9 +1,10 @@
 # Stage 1 - Build Frontend (Vite)
-FROM node:18 AS frontend
+FROM node:20-alpine AS frontend
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
+ENV NODE_ENV=production
 RUN npm run build
 
 # Stage 2 - Backend (Laravel + PHP + Composer)
