@@ -42,4 +42,6 @@ RUN php artisan config:clear && \
     php artisan route:clear && \
     php artisan view:clear
 
+RUN php artisan migrate
+
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
