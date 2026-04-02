@@ -1,0 +1,51 @@
+
+
+
+
+
+
+@extends('layouts.auth')
+
+@section('body')
+    <section class="flex flex-col items-center text-center px-4 sm:px-8 md:px-16 lg:px-32 lg:mt-20 mb-16 space-y-6">
+        <div class="flex bg-white drop-shadow-sm border-gray-100 rounded-full w-fit gap-3 py-3 px-10 mb-20 ">
+            <div class="hover:text-gray-700">
+               <a href="#software" class="text-gray-600 font-semibold hover:bg-gray-200 py-3 px-2 rounded-lg transition-all duration-300">Using our app</a> 
+            </div>
+        </div>
+
+        <div id="software">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-6">
+                Enrich and personalize pet care.
+            </h2>
+            <p class="text-gray-600 sm:text-md text-center max-w-3xl mb-5">
+                Give pet owners control with tools that fit their routine – and ensure pets are fed on time, every time
+            </p>
+            <div>
+                <div>
+                    <div>
+                        Premium features that make pet care smarter and more convenient
+                    </div>
+                    <div>
+                        Dashboard Overview
+                    </div>
+                    <div>
+                        Schedule Control
+                    </div>
+                    <div>
+                        Portion Management
+                    </div>
+                    <div>
+                        Feeding History
+                    </div>
+                </div>
+                <div>
+
+                </div>
+            </div>
+        </div>
+        <div id="hardware">
+            b
+        </div>
+    </section>
+@endsection

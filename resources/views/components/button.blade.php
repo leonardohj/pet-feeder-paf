@@ -1,0 +1,1 @@
+<button id="{{$id}}" class="mt-5 bg-gray-700 p-3 rounded text-white w-full max-w-3xl font-semibold cursor-pointer hover:bg-gray-800">{{$text}}</button>
