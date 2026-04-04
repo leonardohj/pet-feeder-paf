@@ -56,7 +56,7 @@ class ApiController extends Controller
         }
     }
 
-    return Schedule::where('id_feeder', $feeder->id)->get();
+    return Schedule::where('feeder_id', $feeder->id)->get();
 }
 
     /**
