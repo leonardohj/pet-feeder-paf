@@ -6,6 +6,8 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\FeederController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ApiController;
+
 use App\Models\Feeder;
 
 Route::get('/landing-page', function (){
@@ -40,3 +42,7 @@ Route::get('/admin', function(){
 Route::fallback(function () {
     return view('404.404');
 });
+
+Route::get('/api/schedules', [ApiController::class, 'getSchedules']);
+Route::get('/api/feeder', [ApiController::class, 'getFeeder']);
+Route::post('/api/feeding-log', [ApiController::class, 'store']);
