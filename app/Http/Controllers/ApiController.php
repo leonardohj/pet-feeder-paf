@@ -10,11 +10,17 @@ use App\Models\FeedingLog;
 class ApiController extends Controller
 {
     /**
-     * Authenticate device using Bearer token
+     * Authenticate device using Bearer token OR query token
      */
     private function authenticate(Request $request)
     {
+        // Try Authorization Bearer token first
         $token = $request->bearerToken();
+
+        // If not present, allow ?token=xxx
+        if (!$token) {
+            $token = $request->query('token');
+        }
 
         if (!$token) {
             return null;
@@ -24,7 +30,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Get schedules for authenticated feeder
+     * Get schedules
      */
     public function getSchedules(Request $request)
     {
@@ -32,13 +38,11 @@ class ApiController extends Controller
 
         if (!$feeder) {
             return response()->json([
-                'error' => 'Invalid or missing device token'
+                'error' => 'Invalid or missing token'
             ], 401);
         }
 
-        $schedules = Schedule::where('id_feeder', $feeder->id)->get();
-
-        return response()->json($schedules);
+        return Schedule::where('id_feeder', $feeder->id)->get();
     }
 
     /**
@@ -50,7 +54,7 @@ class ApiController extends Controller
 
         if (!$feeder) {
             return response()->json([
-                'error' => 'Invalid or missing device token'
+                'error' => 'Invalid or missing token'
             ], 401);
         }
 
@@ -58,7 +62,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Store feeding log from device
+     * Store feeding log
      */
     public function store(Request $request)
     {
@@ -66,7 +70,7 @@ class ApiController extends Controller
 
         if (!$feeder) {
             return response()->json([
-                'error' => 'Invalid or missing device token'
+                'error' => 'Invalid or missing token'
             ], 401);
         }
 
