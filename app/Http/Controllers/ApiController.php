@@ -33,7 +33,20 @@ class ApiController extends Controller
      * Get schedules
      */
     public function getSchedules(Request $request)
-    {
+{
+    // If a feeder_id is passed via query, use it
+    $feederId = $request->query('feeder_id');
+
+    if ($feederId) {
+        $feeder = Feeder::find($feederId);
+
+        if (!$feeder) {
+            return response()->json([
+                'error' => 'Feeder not found'
+            ], 404);
+        }
+    } else {
+        // Fallback: authenticate via token
         $feeder = $this->authenticate($request);
 
         if (!$feeder) {
@@ -41,9 +54,10 @@ class ApiController extends Controller
                 'error' => 'Invalid or missing token'
             ], 401);
         }
-
-        return Schedule::where('id_feeder', $feeder->id)->get();
     }
+
+    return Schedule::where('id_feeder', $feeder->id)->get();
+}
 
     /**
      * Get feeder info
