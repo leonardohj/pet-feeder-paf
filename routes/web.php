@@ -43,6 +43,3 @@ Route::fallback(function () {
     return view('404.404');
 });
 
-Route::get('/api/schedules', [ApiController::class, 'getSchedules']);
-Route::get('/api/feeder', [ApiController::class, 'getFeeder']);
-Route::post('/api/feeding-log', [ApiController::class, 'store']);
