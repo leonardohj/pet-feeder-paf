@@ -47,30 +47,3 @@ Route::fallback(function () {
 Route::get('/api/schedules', [ApiController::class, 'getSchedules']);
 Route::get('/api/feeder', [ApiController::class, 'getFeeder']);
 
-
-Route::post('api/feeding-log', function(Request $request) {
-
-    // Authenticate feeder (replace with your actual auth logic)
-    $feeder = $request->bearerToken() ? Feeder::where('token', $request->bearerToken())->first() : null;
-
-    if (!$feeder) {
-        return response()->json(['error' => 'Invalid or missing token'], 401);
-    }
-
-    // Validate request
-    $validated = $request->validate([
-        'date'     => 'required|string',
-        'hour'     => 'required|string',
-        'quantity' => 'required|integer',
-        'status'   => 'required|string',
-        'notes'    => 'nullable|string'
-    ]);
-
-    // Attach feeder ID
-    $validated['feeder_id'] = $feeder->id;
-
-    // Create feeding log
-    $feedingLog = FeedingLog::create($validated);
-
-    return response()->json($feedingLog, 201);
-});
