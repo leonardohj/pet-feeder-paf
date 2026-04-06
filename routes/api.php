@@ -7,7 +7,3 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DashboardController;
 use App\Models\Feeder;
-
-Route::post('/feeding-log', [ApiController::class, 'store']);
-Route::get('/schedules', [ApiController::class, 'getSchedules']);
-Route::get('/feeder', [ApiController::class, 'getFeeder']);

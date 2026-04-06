@@ -80,7 +80,8 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        $feeder = $this->authenticate($request);
+        return response()->json(['ola' => 'adeus']);
+
 
         if (!$feeder) {
             return response()->json([
