@@ -3,7 +3,7 @@
 @section('body')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div class="">
+<div class="px-6">
     <div class="max-w-7xl mx-auto space-y-6">
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -61,9 +61,15 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-4 flex justify-between items-center bg-gray-700">
+            <div class="px-6 py-2 flex justify-between items-center bg-gray-700">
                 <h3 class="font-bold text-white uppercase text-xs tracking-wider">Histórico Recente</h3>
+
+                <button id="toggleLogs"
+                    class="text-xs text-white py-1 px-3 rounded-lg bg-gray-800 hover:bg-gray-900 transition">
+                    Ver todos
+                </button>
             </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
@@ -73,11 +79,13 @@
                             <th class="px-6 py-1 font-medium text-right">Dose</th>
                         </tr>
                     </thead>
+
                     <tbody id="feedTableBody" class="divide-y divide-gray-50 text-gray-600">
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -98,71 +106,80 @@ $feedersJson = $feeders->map(function($feeder) {
 @endphp
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// Load the parsed PHP data
-const feeders = @json($feedersJson);
-let currentFeederIndex = 0;
 
-// Initialize Charts with empty data
+<script>
+
+const feeders = @json($feedersJson);
+
+let currentFeederIndex = 0;
+let showAllLogs = false;
+
 const ctxBar = document.getElementById('feedingChart').getContext('2d');
 const ctxPizza = document.getElementById('pizzaChart').getContext('2d');
 
-let feedingChart = new Chart(ctxBar, {
-    type: 'bar',
-    data: { 
-        labels: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], 
-        datasets: [{ 
-            label: 'Gramas', 
-            backgroundColor: '#6366f1', 
-            borderRadius: 8,
-            data: [0, 0, 0, 0, 0, 0, 0] 
+let feedingChart = new Chart(ctxBar,{
+    type:'bar',
+    data:{
+        labels:['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+        datasets:[{
+            label:'Gramas',
+            backgroundColor:'#6366f1',
+            borderRadius:8,
+            data:[0,0,0,0,0,0,0]
         }]
     },
-    options: { 
-        maintainAspectRatio: false, 
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+    options:{
+        maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{beginAtZero:true}}
     }
 });
 
-let pizzaChart = new Chart(ctxPizza, {
-    type: 'doughnut',
-    data: {
-        labels: feeders.map(f => f.name),
-        datasets: [{
-            data: feeders.map(f => f.logs.reduce((s, l) => s + l.amount, 0)),
-            backgroundColor: ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6']
+let pizzaChart = new Chart(ctxPizza,{
+    type:'doughnut',
+    data:{
+        labels:feeders.map(f=>f.name),
+        datasets:[{
+            data:feeders.map(f=>f.logs.reduce((s,l)=>s+l.amount,0)),
+            backgroundColor:['#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6']
         }]
     },
-    options: { cutout: '70%', maintainAspectRatio: false }
+    options:{cutout:'70%',maintainAspectRatio:false}
 });
 
-function updateUI() {
-    if (feeders.length === 0) return;
+function updateUI(){
 
-    const feeder = feeders[currentFeederIndex];
-    document.getElementById('currentFeederName').innerText = feeder.name;
+    if(feeders.length===0) return;
 
-    // Process Bar Data (Weekly)
-    const dataByDay = new Array(7).fill(0);
-    feeder.logs.forEach(log => {
-        const dayIdx = new Date(log.date).getDay();
-        dataByDay[dayIdx] += log.amount;
+    const feeder=feeders[currentFeederIndex];
+    document.getElementById('currentFeederName').innerText=feeder.name;
+
+    const dataByDay=new Array(7).fill(0);
+
+    feeder.logs.forEach(log=>{
+        const dayIdx=new Date(log.date).getDay();
+        dataByDay[dayIdx]+=log.amount;
     });
 
-    // GET COLOR FROM PIZZA CHART
-    const feederColor = pizzaChart.data.datasets[0].backgroundColor[currentFeederIndex];
+    const feederColor=pizzaChart.data.datasets[0].backgroundColor[currentFeederIndex];
 
-    feedingChart.data.datasets[0].data = dataByDay;
-    feedingChart.data.datasets[0].backgroundColor = feederColor;
+    feedingChart.data.datasets[0].data=dataByDay;
+    feedingChart.data.datasets[0].backgroundColor=feederColor;
+
     feedingChart.update();
 
-    // Update Table
-    const tableBody = document.getElementById('feedTableBody');
-    tableBody.innerHTML = feeder.logs.slice().reverse().map(log => `
+    const tableBody=document.getElementById('feedTableBody');
+
+    let logs=[...feeder.logs].reverse();
+
+    if(!showAllLogs){
+        logs=logs.slice(0,3);
+    }
+
+    tableBody.innerHTML=logs.map(log=>`
         <tr class="hover:bg-gray-50 transition">
             <td class="px-6 py-2">
-                <span class="font-medium text-gray-900">${log.date}</span> 
+                <span class="font-medium text-gray-900">${log.date}</span>
                 <span class="text-gray-400 ml-2">${log.time}</span>
             </td>
             <td class="px-6 py-2">
@@ -170,29 +187,43 @@ function updateUI() {
             </td>
             <td class="px-6 py-2 text-right font-bold text-gray-800">${log.amount}g</td>
         </tr>
-    `).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-gray-400">Alimente o seu animal de estimação para aqui aparecer o seu histórico!</td></tr>';
+    `).join('')||'<tr><td colspan="3" class="px-6 py-2 text-center text-gray-400">Alimente o seu animal de estimação para aparecer histórico!</td></tr>';
 
-    // Update Global Stats
-    const allLogs = feeders.flatMap(f => f.logs);
-    const total = allLogs.reduce((s, l) => s + l.amount, 0);
-    const count = allLogs.length;
-    
-    document.getElementById('totalFeed').innerText = `${total.toLocaleString()}g`;
-    document.getElementById('avgFeed').innerText = `${count > 0 ? (total / count).toFixed(1) : 0}g`;
-    document.getElementById('feedCount').innerText = count;
+    const allLogs=feeders.flatMap(f=>f.logs);
+
+    const total=allLogs.reduce((s,l)=>s+l.amount,0);
+
+    const count=allLogs.length;
+
+    document.getElementById('totalFeed').innerText=`${total.toLocaleString()}g`;
+
+    document.getElementById('avgFeed').innerText=`${count>0?(total/count).toFixed(1):0}g`;
+
+    document.getElementById('feedCount').innerText=count;
 }
-// Controls
-document.getElementById('prevFeeder').addEventListener('click', () => {
-    currentFeederIndex = (currentFeederIndex - 1 + feeders.length) % feeders.length;
+
+document.getElementById('prevFeeder').addEventListener('click',()=>{
+    currentFeederIndex=(currentFeederIndex-1+feeders.length)%feeders.length;
     updateUI();
 });
 
-document.getElementById('nextFeeder').addEventListener('click', () => {
-    currentFeederIndex = (currentFeederIndex + 1) % feeders.length;
+document.getElementById('nextFeeder').addEventListener('click',()=>{
+    currentFeederIndex=(currentFeederIndex+1)%feeders.length;
     updateUI();
 });
 
-// Initial Load
+document.getElementById('toggleLogs').addEventListener('click',()=>{
+
+    showAllLogs=!showAllLogs;
+
+    document.getElementById('toggleLogs').innerText=showAllLogs?'Ver menos':'Ver todos';
+
+    updateUI();
+
+});
+
 updateUI();
+
 </script>
+
 @endsection
