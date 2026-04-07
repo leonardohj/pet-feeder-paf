@@ -1,79 +1,88 @@
 @extends('layouts.app')
 
 @section('body')
-<div class="px-5 py-2 w-full">
-  <div class="flex w-full flex-wrap justify-center gap-3">
-    <div class="flex flex-col gap-8 mb-10 w-full items-center">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-      <!-- Alimentações Feitas Chart Section -->
-      <div class="relative w-full max-w-4xl mx-auto mt-10 px-4 flex items-center justify-center">
-        <button id="prevFeeder" class="absolute left-0 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full shadow transition">
-          ‹
-        </button>
-
-        <div class="w-full px-10">
-          <canvas id="feedingChart" class="w-full h-80"></canvas>
+<div class="min-h-screen p-6">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-500">Total Consumido</p>
+                    <div class="p-2 bg-green-50 rounded-lg"><i class="fas fa-weight-hanging text-green-600"></i></div>
+                </div>
+                <p id="totalFeed" class="text-2xl font-bold text-gray-900 mt-2">0g</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-500">Média por Dose</p>
+                    <div class="p-2 bg-blue-50 rounded-lg"><i class="fas fa-chart-line text-blue-600"></i></div>
+                </div>
+                <p id="avgFeed" class="text-2xl font-bold text-gray-900 mt-2">0g</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-500">Alimentações</p>
+                    <div class="p-2 bg-purple-50 rounded-lg"><i class="fas fa-utensils text-purple-600"></i></div>
+                </div>
+                <p id="feedCount" class="text-2xl font-bold text-gray-900 mt-2">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-500">Estado</p>
+                    <div class="p-2 bg-orange-50 rounded-lg"><i class="fas fa-signal text-orange-600"></i></div>
+                </div>
+                <p class="text-lg font-bold text-gray-900 mt-2">Online</p>
+            </div>
         </div>
 
-        <button id="nextFeeder" class="absolute right-0  bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full shadow transition">
-          ›
-        </button>
-      </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-gray-700 uppercase text-xs tracking-wider">Volume Semanal</h3>
+                    <div class="flex items-center gap-4">
+                        <button id="prevFeeder" class="text-gray-400 hover:text-indigo-600 transition"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentFeederName" class="font-semibold text-gray-700 text-sm">Carregando...</span>
+                        <button id="nextFeeder" class="text-gray-400 hover:text-indigo-600 transition"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="h-80">
+                    <canvas id="feedingChart"></canvas>
+                </div>
+            </div>
 
-      <!-- Estatísticas -->
-      <div class="w-full max-w-5xl bg-white rounded-xl shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Estatísticas Semanais/Mensais</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div class="bg-gray-100 rounded-lg p-4">
-            <p class="text-sm text-gray-500">Total Ração Libertada</p>
-            <p id="totalFeed" class="text-2xl font-bold text-gray-900">0g</p>
-          </div>
-          <div class="bg-gray-100 rounded-lg p-4">
-            <p class="text-sm text-gray-500">Média Diária</p>
-            <p id="avgFeed" class="text-2xl font-bold text-gray-900">0g</p>
-          </div>
-          <div class="bg-gray-100 rounded-lg p-4">
-            <p class="text-sm text-gray-500">Número de Alimentações</p>
-            <p id="feedCount" class="text-2xl font-bold text-gray-900">0</p>
-          </div>
-          <div class="bg-gray-100 rounded-lg p-4">
-            <p class="text-sm text-gray-500">Última Alimentação</p>
-            <p id="lastFeed" class="text-2xl font-bold text-gray-900">–</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Histórico -->
-      <div class="w-full max-w-5xl bg-white rounded-xl shadow-md p-6 overflow-x-auto">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-800">Histórico de Alimentações</h2>
-          <div class="flex gap-2">
-            <button id="exportBtn" class="px-3 py-1.5 text-sm rounded-full bg-blue-600 hover:bg-blue-700 text-white transition">
-              Exportar CSV
-            </button>
-            <button id="clearBtn" class="px-3 py-1.5 text-sm rounded-full bg-red-600 hover:bg-red-700 text-white transition">
-              Limpar
-            </button>
-          </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-700 uppercase text-xs tracking-wider mb-6">Uso por Equipamento</h3>
+                <div class="h-80 flex items-center justify-center">
+                    <canvas id="pizzaChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <table class="min-w-full text-sm text-gray-700">
-          <thead class="bg-gray-100 rounded-t-full">
-            <tr>
-              <th class="py-2 px-4 border-b border-gray-600 rounded-tl-xl text-left">Data</th>
-              <th class="py-2 px-4 border-b border-gray-600 text-left">Hora</th>
-              <th class="py-2 px-4 border-b border-gray-600 text-left">Quantidade (g)</th>
-              <th class="py-2 px-4 border-b border-gray-600 rounded-tr-xl text-left">Alimentador</th>
-            </tr>
-          </thead>
-          <tbody id="feedTableBody"></tbody>
-        </table>
-      </div>
-
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                <h3 class="font-bold text-gray-700 uppercase text-xs tracking-wider">Histórico Recente</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-gray-400 text-xs uppercase bg-gray-50/50">
+                            <th class="px-6 py-4 font-medium">Data e Hora</th>
+                            <th class="px-6 py-4 font-medium">Equipamento</th>
+                            <th class="px-6 py-4 font-medium text-right">Dose</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedTableBody" class="divide-y divide-gray-50 text-gray-600">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
 @php
+// Properly format the data for JavaScript
 $feedersJson = $feeders->map(function($feeder) {
     return [
         'name' => $feeder->name,
@@ -81,118 +90,102 @@ $feedersJson = $feeders->map(function($feeder) {
             return [
                 'date' => $log->date->format('Y-m-d'),
                 'time' => $log->date->format('H:i'),
-                'amount' => $log->quantity,
-                'feeder' => $log->feeder->name ?? '' // optional safety
+                'amount' => (float)$log->quantity,
+                'feeder' => $feeder->name
             ];
-        })->toArray(),
+        })
     ];
-})->toArray();
+});
 @endphp
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+// Load the parsed PHP data
 const feeders = @json($feedersJson);
+let currentFeederIndex = 0;
 
-  let currentFeeder = 0;
-  const ctx = document.getElementById('feedingChart').getContext('2d');
-  const tableBody = document.getElementById('feedTableBody');
+// Initialize Charts with empty data
+const ctxBar = document.getElementById('feedingChart').getContext('2d');
+const ctxPizza = document.getElementById('pizzaChart').getContext('2d');
 
-  const chartConfig = {
+let feedingChart = new Chart(ctxBar, {
     type: 'bar',
-    data: {
-      labels: [], datasets: [{
-        label: '',
-        data: [],
-        backgroundColor: 'rgba(75, 85, 99, 0.8)',
-        borderRadius: 6
-      }]
+    data: { 
+        labels: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], 
+        datasets: [{ 
+            label: 'Gramas', 
+            backgroundColor: '#6366f1', 
+            borderRadius: 8,
+            data: [0, 0, 0, 0, 0, 0, 0] 
+        }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, title: { display: true, text: 'Quantidade (g)' } },
-        x: { title: { display: true, text: 'Dia da Semana' } }
-      },
-      plugins: { legend: { display: false }, title: { display: true, text: '' } }
+    options: { 
+        maintainAspectRatio: false, 
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
     }
-  };
+});
 
-  const feedingChart = new Chart(ctx, chartConfig);
+let pizzaChart = new Chart(ctxPizza, {
+    type: 'doughnut',
+    data: {
+        labels: feeders.map(f => f.name),
+        datasets: [{
+            data: feeders.map(f => f.logs.reduce((s, l) => s + l.amount, 0)),
+            backgroundColor: ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6']
+        }]
+    },
+    options: { cutout: '70%', maintainAspectRatio: false }
+});
 
-  function updateChart() {
-    const feeder = feeders[currentFeeder];
-    const logs = feeder.logs;
+function updateUI() {
+    if (feeders.length === 0) return;
 
-    // Aggregate data by day of week
-    const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
-    const dataByDay = days.map(day => {
-      return logs
-        .filter(log => new Date(log.date).getDay() === (days.indexOf(day)+1)%7)
-        .reduce((sum, log) => sum + log.amount, 0);
+    const feeder = feeders[currentFeederIndex];
+    document.getElementById('currentFeederName').innerText = feeder.name;
+
+    // Process Bar Data (Weekly)
+    const dataByDay = new Array(7).fill(0);
+    feeder.logs.forEach(log => {
+        const dayIdx = new Date(log.date).getDay();
+        dataByDay[dayIdx] += log.amount;
     });
 
-    feedingChart.data.labels = days;
     feedingChart.data.datasets[0].data = dataByDay;
-    feedingChart.data.datasets[0].label = feeder.name;
-    feedingChart.options.plugins.title.text = `${feeder.name} - Alimentações Feitas`;
     feedingChart.update();
 
-    // Update table
-    tableBody.innerHTML = logs.map(log => `
-      <tr>
-        <td class="py-2 px-4 border-b border-gray-300">${log.date}</td>
-        <td class="py-2 px-4 border-b border-gray-300">${log.time}</td>
-        <td class="py-2 px-4 border-b border-gray-300">${log.amount}g</td>
-        <td class="py-2 px-4 border-b border-gray-300">${log.feeder}</td>
-      </tr>
-    `).join('');
+    // Update Table
+    const tableBody = document.getElementById('feedTableBody');
+    tableBody.innerHTML = feeder.logs.slice().reverse().map(log => `
+        <tr class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4"><span class="font-medium text-gray-900">${log.date}</span> <span class="text-gray-400 ml-2">${log.time}</span></td>
+            <td class="px-6 py-4"><span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span></td>
+            <td class="px-6 py-4 text-right font-bold text-gray-800">${log.amount}g</td>
+        </tr>
+    `).join('') || '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-400">Sem registos</td></tr>';
 
-    // Update stats
-    const total = logs.reduce((sum, log) => sum + log.amount, 0);
-    const avg = logs.length ? total / logs.length : 0;
-    const last = logs[logs.length-1];
-    document.getElementById('totalFeed').innerText = total + 'g';
-    document.getElementById('avgFeed').innerText = avg.toFixed(1) + 'g';
-    document.getElementById('feedCount').innerText = logs.length;
-    document.getElementById('lastFeed').innerText = last ? `${last.date} ${last.time}` : '–';
-  }
+    // Update Global Stats
+    const allLogs = feeders.flatMap(f => f.logs);
+    const total = allLogs.reduce((s, l) => s + l.amount, 0);
+    const count = allLogs.length;
+    
+    document.getElementById('totalFeed').innerText = `${total.toLocaleString()}g`;
+    document.getElementById('avgFeed').innerText = `${count > 0 ? (total / count).toFixed(1) : 0}g`;
+    document.getElementById('feedCount').innerText = count;
+}
 
-  document.getElementById('prevFeeder').addEventListener('click', () => {
-    currentFeeder = (currentFeeder - 1 + feeders.length) % feeders.length;
-    updateChart();
-  });
+// Controls
+document.getElementById('prevFeeder').addEventListener('click', () => {
+    currentFeederIndex = (currentFeederIndex - 1 + feeders.length) % feeders.length;
+    updateUI();
+});
 
-  document.getElementById('nextFeeder').addEventListener('click', () => {
-    currentFeeder = (currentFeeder + 1) % feeders.length;
-    updateChart();
-  });
+document.getElementById('nextFeeder').addEventListener('click', () => {
+    currentFeederIndex = (currentFeederIndex + 1) % feeders.length;
+    updateUI();
+});
 
-  document.getElementById('exportBtn').addEventListener('click', () => {
-    const logs = feeders[currentFeeder].logs;
-    const csv = [
-      ['Data','Hora','Quantidade','Alimentador'],
-      ...logs.map(log => [log.date, log.time, log.amount, log.feeder])
-    ].map(e => e.join(",")).join("\n");
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'historico_alimentacoes.csv';
-    a.click();
-  });
-
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    if(confirm("Deseja realmente limpar o histórico?")) {
-      tableBody.innerHTML = "";
-      feedingChart.data.datasets[0].data = [];
-      feedingChart.update();
-      document.getElementById('totalFeed').innerText = "0g";
-      document.getElementById('avgFeed').innerText = "0g";
-      document.getElementById('feedCount').innerText = "0";
-      document.getElementById('lastFeed').innerText = "–";
-    }
-  });
-
-  updateChart();
+// Initial Load
+updateUI();
 </script>
 @endsection

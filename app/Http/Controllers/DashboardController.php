@@ -13,13 +13,10 @@ class DashboardController extends Controller
         $userId = Auth::id();
 
         // Get all feeders of this user with their feeding logs
-        $feeders = Feeder::with('feedingLogs')
-            ->where('id_user', $userId)
-            ->get();
+        $feeders = Feeder::where('id_user', $userId)->get();
 
-        // Optionally, flatten all logs into one collection
-        $feedingLogs = $feeders->pluck('feedingLogs')->flatten();
+        
 
-        return view('dashboard.index', compact('feeders', 'feedingLogs'));
+        return view('dashboard.index', compact('feeders'));
     }
 }

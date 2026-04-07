@@ -19,7 +19,7 @@ Route::post('/create-feeding-log', function (Request $request) {
     // Validate input
     $validated = $request->validate([
         'date'     => 'required|date',
-        'hour'     => 'required|string',
+        'hour'     => 'required',
         'quantity' => 'required|integer',
         'status'   => 'required|string',
         'notes'    => 'nullable|string'
