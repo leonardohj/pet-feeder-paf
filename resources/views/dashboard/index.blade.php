@@ -3,7 +3,7 @@
 @section('body')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div class="min-h-screen p-6">
+<div class="">
     <div class="max-w-7xl mx-auto space-y-6">
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -43,7 +43,7 @@
                     <h3 class="font-bold text-gray-700 uppercase text-xs tracking-wider">Volume Semanal</h3>
                     <div class="flex items-center gap-4">
                         <button id="prevFeeder" class="text-gray-400 hover:text-indigo-600 transition"><i class="fas fa-chevron-left"></i></button>
-                        <span id="currentFeederName" class="font-semibold text-gray-700 text-sm">Carregando...</span>
+                        <span id="currentFeederName" class="font-semibold text-gray-700 text-sm">0 Alimentadores</span>
                         <button id="nextFeeder" class="text-gray-400 hover:text-indigo-600 transition"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
@@ -61,16 +61,16 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-                <h3 class="font-bold text-gray-700 uppercase text-xs tracking-wider">Histórico Recente</h3>
+            <div class="px-6 py-4 flex justify-between items-center bg-gray-700">
+                <h3 class="font-bold text-white uppercase text-xs tracking-wider">Histórico Recente</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="text-gray-400 text-xs uppercase bg-gray-50/50">
-                            <th class="px-6 py-4 font-medium">Data e Hora</th>
-                            <th class="px-6 py-4 font-medium">Equipamento</th>
-                            <th class="px-6 py-4 font-medium text-right">Dose</th>
+                        <tr class="text-gray-800 text-xs uppercase bg-gray-300">
+                            <th class="px-6 py-1.5 font-medium">Data e Hora</th>
+                            <th class="px-6 py-1 font-medium">Equipamento</th>
+                            <th class="px-6 py-1 font-medium text-right">Dose</th>
                         </tr>
                     </thead>
                     <tbody id="feedTableBody" class="divide-y divide-gray-50 text-gray-600">
@@ -150,18 +150,27 @@ function updateUI() {
         dataByDay[dayIdx] += log.amount;
     });
 
+    // GET COLOR FROM PIZZA CHART
+    const feederColor = pizzaChart.data.datasets[0].backgroundColor[currentFeederIndex];
+
     feedingChart.data.datasets[0].data = dataByDay;
+    feedingChart.data.datasets[0].backgroundColor = feederColor;
     feedingChart.update();
 
     // Update Table
     const tableBody = document.getElementById('feedTableBody');
     tableBody.innerHTML = feeder.logs.slice().reverse().map(log => `
         <tr class="hover:bg-gray-50 transition">
-            <td class="px-6 py-4"><span class="font-medium text-gray-900">${log.date}</span> <span class="text-gray-400 ml-2">${log.time}</span></td>
-            <td class="px-6 py-4"><span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span></td>
-            <td class="px-6 py-4 text-right font-bold text-gray-800">${log.amount}g</td>
+            <td class="px-6 py-2">
+                <span class="font-medium text-gray-900">${log.date}</span> 
+                <span class="text-gray-400 ml-2">${log.time}</span>
+            </td>
+            <td class="px-6 py-2">
+                <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span>
+            </td>
+            <td class="px-6 py-2 text-right font-bold text-gray-800">${log.amount}g</td>
         </tr>
-    `).join('') || '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-400">Sem registos</td></tr>';
+    `).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-gray-400">Alimente o seu animal de estimação para aqui aparecer o seu histórico!</td></tr>';
 
     // Update Global Stats
     const allLogs = feeders.flatMap(f => f.logs);
@@ -172,7 +181,6 @@ function updateUI() {
     document.getElementById('avgFeed').innerText = `${count > 0 ? (total / count).toFixed(1) : 0}g`;
     document.getElementById('feedCount').innerText = count;
 }
-
 // Controls
 document.getElementById('prevFeeder').addEventListener('click', () => {
     currentFeederIndex = (currentFeederIndex - 1 + feeders.length) % feeders.length;
