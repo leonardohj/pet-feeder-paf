@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('feeders', function (Blueprint $table) {
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('pet_type')->nullable();
             $table->date('last_fed_at')->nullable();
             $table->string('device_token')->unique();
-            $table->timestamps(); 
+            $table->timestamps();
         });
 
         Schema::create('schedules', function (Blueprint $table) {
@@ -37,6 +36,7 @@ return new class extends Migration
             $table->integer('status');
             $table->string('notes')->nullable();
             $table->date('date');
+            $table->time('hour');
         });
     }
 
