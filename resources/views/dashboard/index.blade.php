@@ -82,20 +82,19 @@
 </div>
 
 @php
-// Properly format the data for JavaScript
 $feedersJson = $feeders->map(function($feeder) {
     return [
         'name' => $feeder->name,
-        'logs' => $feeder->feedingLogs->map(function($log) {
+        'logs' => $feeder->feedingLogs->map(function($log) use ($feeder) {
             return [
                 'date' => $log->date->format('Y-m-d'),
                 'time' => $log->date->format('H:i'),
-                'amount' => (float)$log->quantity,
+                'amount' => (float) $log->quantity,
                 'feeder' => $feeder->name
             ];
-        })
+        })->toArray(),
     ];
-});
+})->toArray();
 @endphp
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
