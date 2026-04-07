@@ -5,24 +5,35 @@ use Illuminate\Support\Facades\Route;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Feeder;
+use App\Models\FeedingLog;
 
-Route::post('/create-user', function (Request $request) {
 
+Route::post('/create-feeding-log', function (Request $request) {
+
+    $feeder = Feeder::find($request->input('feeder_id'));
+    if (!$feeder) {
+        return response()->json(['error' => 'Invalid or missing token'], 401);
+    }
+
+    // Validate input
     $validated = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:6'
+        'date'     => 'required|date',
+        'hour'     => 'required|string',
+        'quantity' => 'required|integer',
+        'status'   => 'required|string',
+        'notes'    => 'nullable|string'
     ]);
 
-    $user = User::create([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'password' => Hash::make($validated['password'])
-    ]);
+    // Attach feeder ID
+    $validated['feeder_id'] = $feeder->id;
+
+    // Create feeding log
+    $feedingLog = FeedingLog::create($validated);
 
     return response()->json([
-        'message' => 'User created successfully',
-        'user' => $user
+        'message' => 'Feeding log created successfully',
+        'feeding_log' => $feedingLog
     ], 201);
 
 });
