@@ -96,7 +96,7 @@ $feedersJson = $feeders->map(function($feeder) {
         'logs' => $feeder->feedingLogs->map(function($log) use ($feeder) {
             return [
                 'date' => $log->date->format('Y-m-d'),
-                'hour' => $log->hour->format('H:i'),
+                'hour' => $log->hour,
                 'amount' => (float) $log->quantity,
                 'feeder' => $feeder->name
             ];
