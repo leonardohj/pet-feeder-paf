@@ -15,7 +15,8 @@ class FeedingLog extends Model
         'quantity',
         'status',
         'notes',
-        'date'
+        'date',
+        'hour'
     ];
 
     protected $casts = [
