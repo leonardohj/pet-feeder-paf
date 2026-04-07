@@ -96,7 +96,7 @@ $feedersJson = $feeders->map(function($feeder) {
         'logs' => $feeder->feedingLogs->map(function($log) use ($feeder) {
             return [
                 'date' => $log->date->format('Y-m-d'),
-                'time' => $log->date->format('H:i'),
+                'hour' => $log->hour->format('H:i'),
                 'amount' => (float) $log->quantity,
                 'feeder' => $feeder->name
             ];
@@ -180,7 +180,7 @@ function updateUI(){
         <tr class="hover:bg-gray-50 transition">
             <td class="px-6 py-2">
                 <span class="font-medium text-gray-900">${log.date}</span>
-                <span class="text-gray-400 ml-2">${log.time}</span>
+                <span class="text-gray-400 ml-2">${log.hour}</span>
             </td>
             <td class="px-6 py-2">
                 <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span>
