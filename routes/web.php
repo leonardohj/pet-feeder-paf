@@ -46,4 +46,3 @@ Route::fallback(function () {
 
 Route::get('/api/schedules', [ApiController::class, 'getSchedules']);
 Route::get('/api/feeder', [ApiController::class, 'getFeeder']);
-

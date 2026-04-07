@@ -1,38 +1,28 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GramsController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\FeederController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\DashboardController;
-use App\Models\Feeder;
-use App\Models\FeedingLog;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-Route::post('api/feeding-log', function(Request $request) {
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
-    // Authenticate feeder (replace with your actual auth logic)
-    $feeder = $request->bearerToken() ? Feeder::where('token', $request->bearerToken())->first() : null;
+Route::post('/create-user', function (Request $request) {
 
-    if (!$feeder) {
-        return response()->json(['error' => 'Invalid or missing token'], 401);
-    }
-
-    // Validate request
     $validated = $request->validate([
-        'date'     => 'required|string',
-        'hour'     => 'required|string',
-        'quantity' => 'required|integer',
-        'status'   => 'required|string',
-        'notes'    => 'nullable|string'
+        'name' => 'required|string',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6'
     ]);
 
-    // Attach feeder ID
-    $validated['feeder_id'] = $feeder->id;
+    $user = User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => Hash::make($validated['password'])
+    ]);
 
-    // Create feeding log
-    $feedingLog = FeedingLog::create($validated);
+    return response()->json([
+        'message' => 'User created successfully',
+        'user' => $user
+    ], 201);
 
-    return response()->json($feedingLog, 201);
 });
