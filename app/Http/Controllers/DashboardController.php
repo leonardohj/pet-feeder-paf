@@ -15,7 +15,8 @@ class DashboardController extends Controller
         // Get all feeders of this user with their feeding logs
         $feeders = Feeder::where('id_user', $userId)->get();
 
-        
+        // Carrega os logs de alimentação
+        $feeders->load('feedingLogs');
 
         return view('dashboard.index', compact('feeders'));
     }
