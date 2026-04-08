@@ -2,13 +2,16 @@
 
 @section('breadcrumb')
 <x-breadcrumbs class="mb-4" :links="[
-    'Dashboard' => '',
+    __('breadcrumbs.dashboard') => '',
 ]" />
 @endsection
-
+@php
+    $user = Auth::user();
+@endphp
 @section('body')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+@if($user->hasFeeders())
 <div class="px-6">
     <div class="max-w-7xl mx-auto space-y-6">
         
@@ -231,5 +234,23 @@ document.getElementById('toggleLogs').addEventListener('click',()=>{
 updateUI();
 
 </script>
+@else
+<x-card>
+    <div class="flex flex-col m-2 p-2 justify-between items-center text-center md:text-left md:items-start flex-1">
+      <h2 class="text-lg font-semibold text-gray-800">
+        Não tens um alimentador associado à tua conta?
+      </h2>
+      <p class="text-gray-600 mb-4">
+        Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente.
+      </p>
+      <button 
+        class="bg-black hover:bg-gray-800 transition-colors w-full text-white font-medium px-6 py-3 rounded-xl"
+        @click="$dispatch('open-modal-associate-feeder')"
+      >
+        Associar alimentador
+      </button>
+    </div>
+</x-card>
+@endif
 
 @endsection

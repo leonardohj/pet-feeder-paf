@@ -4,7 +4,6 @@
         @foreach ($links as $label => $link)
             <li>
                 <div class="flex items-center">
-
                     <x-radix-chevron-right class="h-7 w-7 flex-shrink-0 text-gray-400" />
                     <a href="{{ $link }}"
                         class="ml-4 text-sm text-gray-500 hover:text-gray-700">{{ $label }}</a>

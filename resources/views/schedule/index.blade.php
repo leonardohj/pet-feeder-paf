@@ -2,7 +2,7 @@
 
 @section('breadcrumb')
 <x-breadcrumbs class="mb-4" :links="[
-    'Horários' => route('schedule'),
+    __('breadcrumbs.schedules') => route('schedule'),
 ]" />
 @endsection
 

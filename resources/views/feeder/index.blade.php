@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('breadcrumb')
 <x-breadcrumbs class="mb-4" :links="[
-    'Alimentadores' => route('feeder.index'),
+    __('breadcrumbs.feeders') => route('feeder.index'),
 ]" />
 @endsection
 @section('body')

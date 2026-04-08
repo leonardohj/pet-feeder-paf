@@ -7,6 +7,7 @@ use App\Http\Controllers\FeederController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Middleware\Language;
 use Illuminate\Http\Request;
 use App\Models\FeedingLog;
@@ -28,6 +29,7 @@ Route::middleware(['web', Language::class])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('auth')->group(function () {
+        Route::resource('settings', SettingsController::class);
         Route::get('/', [DashboardController::class, 'index'])->name('home');
         Route::post('/changeVariables', [GramsController::class, 'store'])->name('changeVariables');
         Route::get('/feeder', [FeederController::class, 'index'])->name('feeder.index');

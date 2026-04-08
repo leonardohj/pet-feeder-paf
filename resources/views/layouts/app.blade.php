@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html x-data="layout()" x-init="init()">
 
+@php
+    $user = Auth::user();
+@endphp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +20,7 @@
 
 <body class="h-screen flex flex-col overflow-hidden">
     <div>
-        <select onchange="changeLanguage(this.value)" class="border-none focus:ring-0 text-sm">
-            <option value="en" {{ App::getLocale() == 'en' ? 'selected' : '' }}>English</option>
-            <option value="pt" {{ App::getLocale() == 'pt' ? 'selected' : '' }}>Português</option>
-        </select>
+
     </div>
     <div class="flex flex-col flex-shrink-0" x-data="{ showUserInfo: false }">
         <!-- Header -->
@@ -138,11 +138,11 @@
                 <span class="text-gray-700 font-medium">Alimentadores</span>
             </a>
 
-            <div
+            <a href="{{ route('settings.index') }}"
                 class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200 cursor-pointer">
                 <x-mdi-cog class="h-8 w-8 flex-shrink-0" />
                 <span class="text-gray-700 font-medium">Configurações</span>
-            </div>
+            </a>
         </div>
 
         <!-- DESKTOP SIDEBAR -->
@@ -158,7 +158,7 @@
                     Homepage
                 </span>
             </a>
-
+            @if($user->hasFeeders())
             <a href="{{ url('/schedule') }}"
                 class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
                {{ Request::is('schedule') ? 'bg-gray-300' : '' }}">
@@ -178,15 +178,17 @@
                     Alimentadores
                 </span>
             </a>
-
-            <div
-                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer">
+            @endif
+            <a href="{{ route('settings.index') }}"
+                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
+                {{ Request::is('settings') ? 'bg-gray-300' : '' }}
+                ">
                 <x-mdi-cog class="h-8 w-8 flex-shrink-0" />
                 <span
                     class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
                     Configurações
                 </span>
-            </div>
+            </a>
 
         </div>
 
