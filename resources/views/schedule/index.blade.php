@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<x-breadcrumbs class="mb-4" :links="[
+    'Horários' => route('schedule'),
+]" />
+@endsection
+
 @section('body')
     <x-card>
         <form method="GET" action="{{ route('schedule') }}">

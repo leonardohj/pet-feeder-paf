@@ -9,7 +9,7 @@
             >
                 <x-radix-hamburger-menu class="w-8 h-8"/>
             </div>
-            <img src="{{ asset('img/logo_paf.png') }}" alt="" class="h-8 lg:h-12">
+            <img src="{{ asset('img/logo_paf.png') }}" alt="" class="h-100">
         </div>
 
         <div class="flex-1"></div>

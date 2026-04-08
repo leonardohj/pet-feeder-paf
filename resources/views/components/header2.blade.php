@@ -1,4 +1,4 @@
-<div class="flex flex-col fixed w-full">
+<div class="flex flex-col w-full">
   <div id="mainHeader" class="h-12 md:h-14 lg:h-16 flex items-center px-2 md:px-4 bg-gray-50">
     <div class="flex items-center">
       <a href="/landing-page"><img src="{{ asset('img/logo_paf.png') }}" alt="Logo" class="h-8 md:h-10"></a>

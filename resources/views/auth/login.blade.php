@@ -1,6 +1,7 @@
 @extends('layouts.auth')
 
 @section('body')
+<x-header2></x-header2>
 <div class="flex-1 flex">
     <div class="flex-1 min-h-0 bg-white ">
         <div class="bg-gray-50">

@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<x-breadcrumbs class="mb-4" :links="[
+    'Dashboard' => '',
+]" />
+@endsection
+
 @section('body')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 

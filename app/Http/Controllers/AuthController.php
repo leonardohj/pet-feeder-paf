@@ -6,9 +6,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\App;
 
 class AuthController
 {
+    public function changeLang($langcode)
+    {
+        App::setLocale(session('lang_code', config('app.locale')));
+        return redirect()->back();
+    }
     public function showLogin(){
         return view('auth.login');
     }
