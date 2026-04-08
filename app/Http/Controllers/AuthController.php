@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\App;
 
+
 class AuthController
 {
     public function changeLang($langcode)
     {
-        App::setLocale(session('lang_code', config('app.locale')));
+        App::setLocale($langcode);
+        session()->put("lang_code", $langcode);
         return redirect()->back();
     }
     public function showLogin(){
