@@ -9,12 +9,12 @@
     <div class="flex gap-1 md:gap-2 lg:gap-3 text-nowrap">
 <div class="font-semibold cursor-pointer rounded-full transition-all duration-300 ease-in-out text-center border border-gray-200 hover:border-gray-600 hover:bg-gray-100 text-gray-900 bg-white 
   text-xs md:text-sm py-1.5 md:py-2 px-4 md:px-5 lg:px-6">
-  Comprar produto
+  {{__('auth.buy_product')}}
 </div>
 <a href="{{ Route::is('showRegister') || Route::is('landing') ? route('showLogin') : route('showRegister') }}">
   <div class="font-semibold cursor-pointer rounded-full transition-all duration-300 ease-in-out text-center
       bg-gray-900 text-white hover:bg-gray-800 text-xs md:text-sm py-1.5 md:py-2 px-4 md:px-5 lg:px-6">
-    {{ Route::is('showRegister') || Route::is('landing') ? 'Entrar' : 'Registo' }}
+    {{ Route::is('showRegister') || Route::is('landing') ? __('auth.login') : __('auth.register') }}
   </div>
 </a>
     </div>

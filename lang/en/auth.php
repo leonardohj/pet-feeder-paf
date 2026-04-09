@@ -14,7 +14,20 @@ return [
     */
 
     'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'register' => 'Register',
+    'username' => 'Name',
+    'enter_username' => 'Enter your username',
+    'email' => 'Email',
+    'enter_email' => 'Enter your email address',
+    'password' => 'Password',
+    'enter_password' => 'Enter your password',
+    'confirm_password' => 'Confirm Password',
+    'enter_confirm_password' => 'Confirm your password',
+    'already_has_account' => 'Already have an account?',
+    'login' => 'Login',
+    'doesnt_have_account' => "Doesn't have an account?",
+    'do_register' => 'Create one!',
+    'buy_product' => 'Buy product'
 
 ];

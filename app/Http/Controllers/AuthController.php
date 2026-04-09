@@ -15,6 +15,7 @@ class AuthController
     {
         App::setLocale($langcode);
         session()->put("lang_code", $langcode);
+        
         return redirect()->back();
     }
     public function showLogin(){

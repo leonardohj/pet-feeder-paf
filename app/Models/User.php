@@ -45,4 +45,12 @@ class User extends Authenticatable
     {
         return $this->feeders()->exists();
     }
+
+    public function hasLogs(): bool
+    {
+        // Check if any of the user's feeders have logs
+        return $this->feeders()->with('feedingLogs')->get()->contains(function ($feeder) {
+            return $feeder->hasLogs();
+        });
+    }
 }

@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<x-breadcrumbs class="mb-4" :links="[
+    __('breadcrumbs.feeders') => route('feeder.index'),
+    $feeder->name => ''
+]" />
+@endsection
+
 @section('body')
 <div class="px-5 py-6 w-full flex justify-center">
     <div class="w-full max-w-3xl bg-white rounded-2xl shadow-md p-6 flex flex-col gap-6">

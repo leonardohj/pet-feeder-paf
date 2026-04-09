@@ -41,4 +41,9 @@ class Feeder extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+
+    public function hasLogs(): bool
+    {
+        return $this->feedingLogs()->exists();
+    }
 }

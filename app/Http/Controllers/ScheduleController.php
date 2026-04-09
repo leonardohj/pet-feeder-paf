@@ -13,6 +13,15 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
+        $days = [
+            1 => __('days.monday'),
+            2 => __('days.tuesday'),
+            3 => __('days.wednesday'),
+            4 => __('days.thursday'),
+            5 => __('days.friday'),
+            6 => __('days.saturday'),
+            7 => __('days.sunday'),
+        ];
         $query = Feeder::where('id_user', Auth::id());
     
         if ($request->filled('search')) {
@@ -21,7 +30,7 @@ class ScheduleController extends Controller
     
         $feeders = $query->with('schedules')->get();
     
-        return view('schedule.index', compact('feeders'));
+        return view('schedule.index', compact('feeders', 'days'));
     }
     public function search(Request $request)
     {

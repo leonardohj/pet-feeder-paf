@@ -4,6 +4,7 @@
 @php
     $user = Auth::user();
 @endphp
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,18 +20,18 @@
 </head>
 
 <body class="h-screen flex flex-col overflow-hidden">
-    <div>
 
-    </div>
-    <div class="flex flex-col flex-shrink-0" x-data="{ showUserInfo: false }">
-        <!-- Header -->
+    <!-- HEADER -->
+    <div class="flex flex-col flex-shrink-0">
         <div id="mainHeader" class="h-16 flex items-center px-3 bg-gray-50">
-            <div class="text-black flex items-center">
+            <div class="text-black flex items-center gap-2">
                 <!-- Sidebar toggle -->
                 <div class="p-3 rounded-full hover:bg-gray-100 cursor-pointer" @click="toggleSidebar()">
                     <x-radix-hamburger-menu class="w-8 h-8" />
                 </div>
+
                 <img src="{{ asset('img/logo_paf.png') }}" alt="" class="h-8 lg:h-10">
+
                 @hasSection('breadcrumb')
                     <div class="px-4 lg:h-10 h-8 text-sm text-gray-500 flex items-center gap-2">
                         @yield('breadcrumb')
@@ -41,32 +42,25 @@
             <div class="flex-1"></div>
 
             <div class="flex flex-row items-center gap-2">
-
-                <!-- Plus -->
+                <!-- Plus Button -->
                 <div class="p-3 rounded-full hover:bg-gray-100 cursor-pointer"
                     @click="$dispatch('open-modal-associate-feeder')">
                     <x-radix-plus class="w-6 h-6" />
                 </div>
 
-                <!-- USER -->
-                <div class="relative" x-data="{ showUserInfo: false }">
-
+                <!-- USER DROPDOWN -->
+                <div class="relative" x-data="userDropdown()" x-cloak>
                     <div class="cursor-pointer text-white rounded-full h-10 w-10 bg-gray-600 flex justify-center items-center select-none"
-                        @click="showUserInfo = !showUserInfo">
+                        @click="toggle()">
                         {{ Str::upper(Str::substr(Auth::user()->name, 0, 1)) }}
                     </div>
 
-                    <div x-cloak x-show="showUserInfo" x-transition.origin.top.right
-                        @click.outside="showUserInfo = false" class="absolute right-0 mt-3 w-80 z-50">
-
+                    <div x-show="show" x-transition.origin.top.right @click.outside="close()"
+                        class="absolute right-0 mt-3 w-80 z-50" x-cloak>
                         <div class="bg-white shadow-lg rounded-xl p-4">
-
                             <div class="relative flex font-semibold justify-center items-center">
-                                <div class="text-center w-full">
-                                    {{ Auth::user()->email }}
-                                </div>
-
-                                <div @click="showUserInfo=false" class="absolute right-0 cursor-pointer">
+                                <div class="text-center w-full">{{ Auth::user()->email }}</div>
+                                <div @click="close()" class="absolute right-0 cursor-pointer">
                                     <x-radix-cross-2 class="h-5 w-5" />
                                 </div>
                             </div>
@@ -84,25 +78,20 @@
 
                             <form action="{{ route('logout') }}" method="POST" class="mt-4">
                                 @csrf
-
                                 <button type="submit"
                                     class="w-full rounded-xl bg-gray-200 py-2 hover:bg-gray-300 transition">
                                     Sair da conta
                                 </button>
                             </form>
-
                         </div>
-
                     </div>
-
                 </div>
 
             </div>
         </div>
     </div>
 
-    <x-modal />
-
+    <!-- MAIN LAYOUT -->
     <div class="flex-1 flex min-h-0 overflow-hidden">
 
         <!-- MOBILE SIDEBAR OVERLAY -->
@@ -155,41 +144,41 @@
                 <x-mdi-home-outline class="h-8 w-8 flex-shrink-0" />
                 <span
                     class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    Homepage
-                </span>
-            </a>
-            @if($user->hasFeeders())
-            <a href="{{ url('/schedule') }}"
-                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-               {{ Request::is('schedule') ? 'bg-gray-300' : '' }}">
-                <x-mdi-calendar-clock-outline class="h-8 w-8 flex-shrink-0" />
-                <span
-                    class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    Horários
+                    {{ __('navbar.dashboard') }}
                 </span>
             </a>
 
-            <a href="{{ url('/feeder') }}"
-                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
+            @if ($user->hasFeeders())
+                <a href="{{ url('/schedule') }}"
+                    class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
+               {{ Request::is('schedule') ? 'bg-gray-300' : '' }}">
+                    <x-mdi-calendar-clock-outline class="h-8 w-8 flex-shrink-0" />
+                    <span
+                        class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+                        {{ __('navbar.schedules') }}
+                    </span>
+                </a>
+
+                <a href="{{ url('/feeder') }}"
+                    class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
                {{ Request::is('feeder') ? 'bg-gray-300' : '' }}">
-                <x-mdi-paw-outline class="h-8 w-8 flex-shrink-0" />
-                <span
-                    class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    Alimentadores
-                </span>
-            </a>
+                    <x-mdi-paw-outline class="h-8 w-8 flex-shrink-0" />
+                    <span
+                        class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+                        {{ __('navbar.feeders') }}
+                    </span>
+                </a>
             @endif
+
             <a href="{{ route('settings.index') }}"
                 class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-                {{ Request::is('settings') ? 'bg-gray-300' : '' }}
-                ">
+                {{ Request::is('settings') ? 'bg-gray-300' : '' }}">
                 <x-mdi-cog class="h-8 w-8 flex-shrink-0" />
                 <span
                     class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    Configurações
+                    {{ __('navbar.settings') }}
                 </span>
             </a>
-
         </div>
 
         <!-- CONTENT -->
@@ -199,7 +188,7 @@
                 <div class="bg-white h-5 rounded-tl-full"></div>
             </div>
 
-            <div class="flex-1 overflow-y-auto px-0.5">
+            <div class="flex-1 overflow-y-auto px-0.5 mt-3 mb-3 md:mt-0">
                 @if (session('success'))
                     <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-lg shadow">
                         {{ session('success') }}
@@ -223,7 +212,12 @@
 
     </div>
 
+    <!-- STYLES -->
     <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
         #sidebar.hover {
             width: 14rem;
             transition: width 0.3s ease-in-out;
@@ -238,31 +232,49 @@
         }
     </style>
 
+    <!-- SCRIPTS -->
     <script>
         function layout() {
             return {
                 sidebarOpen: false,
-
+                initialized: false, // <-- track first initialization
                 init() {
                     const saved = sessionStorage.getItem('sidebarOpen')
                     this.sidebarOpen = saved === 'true'
-                },
 
+                    // Mark initialization done after state is set
+                    this.initialized = true
+                },
                 toggleSidebar(force = null) {
                     if (force === null) {
                         this.sidebarOpen = !this.sidebarOpen
                     } else {
                         this.sidebarOpen = force
                     }
-
                     sessionStorage.setItem('sidebarOpen', this.sidebarOpen)
+                },
+                sidebarTransitionClasses() {
+                    // Only apply transition if already initialized (user toggled)
+                    return this.initialized ? '' : 'transition-transform duration-300'
                 }
             }
         }
-        function changeLanguage(lang) {
-        window.location = '{{ url('change-language') }}/' + lang;
-    }
+
+        function userDropdown() {
+            return {
+                show: false,
+                toggle() {
+                    this.show = !this.show
+                },
+                close() {
+                    this.show = false
+                }
+            }
+        }
     </script>
 
 </body>
+
 </html>
+
+<x-modal />

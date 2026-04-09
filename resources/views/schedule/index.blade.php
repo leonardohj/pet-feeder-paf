@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('breadcrumb')
-<x-breadcrumbs class="mb-4" :links="[
-    __('breadcrumbs.schedules') => route('schedule'),
-]" />
+    <x-breadcrumbs class="mb-4" :links="[
+        __('breadcrumbs.schedules') => route('schedule'),
+    ]" />
 @endsection
 
 @section('body')
     <x-card>
         <form method="GET" action="{{ route('schedule') }}">
-            <x-search name="search" label="Pesquisar alimentadores" placeholder="Search something..." :value="request('search')">
+            <x-search name="search" label="{{ __('schedule.search_feeders') }}" :placeholder="__('schedule.search')" :value="request('search')">
                 @if (request('search'))
                     <a href="{{ route('schedule') }}">
                         <x-mdi-close class="h-5 w-5 text-gray-500 hover:text-gray-400 cursor-pointer" />
@@ -29,7 +29,7 @@
                 : [],
         ) }}
     )" x-cloak class="mt-4">
-        <x-card title="Lista de Alimentadores">
+        <x-card title="{{__('schedule.feeders_list')}}">
 
             @forelse($feeders as $feeder)
                 <div class="border border-gray-100 rounded-2xl mb-3 shadow-sm bg-white">
@@ -65,12 +65,12 @@
 
 
                     <!-- Feeder schedules -->
-                    <div x-show="expanded === {{ $feeder->id }}" 
+                    <div x-show="expanded === {{ $feeder->id }}"
                         class="border-t border-gray-200 px-4 sm:px-5 py-3 sm:py-4">
 
                         @if ($feeder->schedules->isEmpty())
                             <p class="text-gray-500 text-sm sm:text-base mb-2">
-                                Nenhum horário programado.
+                                {{ __('schedule.no_schedules') }}
                             </p>
                         @else
                             <ul class="space-y-2 sm:space-y-3">
@@ -94,13 +94,13 @@
                                         <button type="button"
                                             class="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
                                             @click="openModal(
-    {{ $schedule->id }},
-    {{ $feeder->id }},
-    '{{ $schedule->time }}',
-    {{ $schedule->quantity }},
-    '{{ $schedule->type }}',
-    {{ json_encode($schedule->days) }}
-)">
+                                                {{ $schedule->id }},
+                                                {{ $feeder->id }},
+                                                '{{ $schedule->time }}',
+                                                {{ $schedule->quantity }},
+                                                '{{ $schedule->type }}',
+                                                {{ json_encode($schedule->days) }}
+                                            )">
                                             Editar
                                         </button>
 
@@ -112,10 +112,9 @@
 
                         <div class="mt-3 flex justify-end">
 
-                            <button type="button" @click="openModal(null, {{ $feeder->id }})"
-                                class="bg-gray-900 w-full hover:bg-gray-800 text-white font-medium px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-sm sm:text-base">
-                                + Adicionar horário
-                            </button>
+                            <x-button type="button" click="openModal(null, {{ $feeder->id }})">
+                                + {{__('schedule.add_schedule')}}
+                            </x-button>
 
                         </div>
 
@@ -125,7 +124,7 @@
             @empty
 
                 <p class="text-gray-500 text-center text-sm sm:text-base">
-                    Nenhum alimentador associado à sua conta.
+                    {{ __('schedule.no_feeder_associated') }}
                 </p>
             @endforelse
 
@@ -134,7 +133,7 @@
 
 
         <!-- Modal -->
-        <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.6)] p-4">
 
             <div class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6" @click.away="closeModal()">
 
@@ -158,81 +157,57 @@
 
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Hora
-                        </label>
-
-                        <input type="time" name="time" x-model="time" class="w-full border rounded-lg p-2" required>
+                        <x-input type="time" name="time" x-model="time" :label="__('schedule.time')"></x-input>
                     </div>
 
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Quantidade (g)
-                        </label>
-
-                        <input type="number" name="quantity" x-model="quantity" class="w-full border rounded-lg p-2"
-                            required min="1">
+                        <x-input type="number" name="quantity" x-model="quantity" required min="50"
+                            :label="__('schedule.quantity')"></x-input>
                     </div>
 
 
                     <div class="mb-4">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Tipo
-                        </label>
-
-                        <select name="type" x-model="type" class="w-full border rounded-lg p-2">
-
-                            <option value="always">Todos os dias</option>
-                            <option value="specific">Dias específicos</option>
-
-                        </select>
+                        <x-select name="type" x_model="type" :label="__('schedule.type')" :options="['always' => __('schedule.all_days'), 'specific' => __('schedule.specific_days')]"></x-select>
 
                     </div>
 
 
                     <div class="mb-4" x-show="type === 'specific'">
-
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Dias
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('schedule.days') }}
                         </label>
 
-                        <div class="flex flex-wrap gap-2">
-
-                            @foreach (['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] as $day)
-                                <label class="cursor-pointer">
-
-                                    <input type="checkbox" name="days[]" value="{{ $day }}"
+                        <div class="grid grid-cols-4 gap-2">
+                            @foreach ($days as $key => $day)
+                                <label class="cursor-pointer relative">
+                                    <input type="checkbox" name="days[]" value="{{ $key }}"
                                         :checked="days.includes('{{ $day }}')"
-                                        @click="toggleDay('{{ $day }}')" class="hidden">
+                                        @click="toggleDay('{{ $day }}')" class="sr-only">
 
                                     <span
                                         :class="days.includes('{{ $day }}') ?
                                             'bg-gray-900 text-white' :
-                                            'bg-gray-200 text-gray-700'"
-                                        class="px-3 py-1 rounded-lg">
+                                            'bg-gray-200 text-gray-700 hover:bg-gray-300'"
+                                        class="px-1 py-2 rounded-full transition duration-200 ease-in-out text-center w-full block select-none">
                                         {{ $day }}
                                     </span>
-
                                 </label>
                             @endforeach
-
                         </div>
-
                     </div>
-
 
                     <div class="flex justify-end gap-2 mt-4">
 
-                        <button type="button" @click="closeModal()"
+                        <x-button borders="border border-gray-200" color="bg-gray-50 hover:bg-gray-100"
+                            text_color="text-gray-700" type="button" click="closeModal()"
                             class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
-                            Cancelar
-                        </button>
+                            {{ __('index.cancel') }}
+                        </x-button>
 
-                        <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
-                            Salvar
-                        </button>
+                        <x-button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+                            {{ __('index.save') }}
+                        </x-button>
 
                     </div>
 
@@ -246,40 +221,40 @@
 
     <script>
         function feedersList(count, searchMatches = []) {
-        
+
             let firstOpen = null;
-        
+
             if (searchMatches.length) {
                 firstOpen = searchMatches[0];
             }
-        
+
             if (!firstOpen && count === 1) {
                 firstOpen = {{ $feeders->first()?->id ?? 'null' }};
             }
-        
+
             return {
-        
+
                 expanded: firstOpen,
-        
+
                 modalOpen: false,
-                modalTitle: 'Adicionar Horário',
-        
+                modalTitle: "{{ __('schedule.add_schedule') }}",
+
                 feederId: null,
                 scheduleId: null,
-        
+
                 time: '',
                 quantity: '',
                 type: 'always',
-        
+
                 days: [],
                 editing: false,
-        
-        
+
+
                 toggle(id) {
                     this.expanded = this.expanded === id ? null : id;
                 },
-        
-        
+
+
                 openModal(
                     scheduleId = null,
                     feederId = null,
@@ -291,34 +266,34 @@
                     this.modalOpen = true;
                     this.scheduleId = scheduleId;
                     this.feederId = feederId;
-        
+
                     this.time = time;
                     this.quantity = quantity;
                     this.type = type;
                     this.days = days || [];
-        
+
                     this.editing = !!scheduleId;
-                    this.modalTitle = this.editing
-                        ? 'Editar Horário'
-                        : 'Adicionar Horário';
+                    this.modalTitle = this.editing ?
+                        "{{ __('schedule.edit_schedule') }}" :
+                        "{{ __('schedule.add_schedule') }}";
                 },
-        
-        
+
+
                 closeModal() {
                     this.modalOpen = false;
-        
+
                     this.scheduleId = null;
                     this.feederId = null;
-        
+
                     this.time = '';
                     this.quantity = '';
                     this.type = 'always';
-        
+
                     this.days = [];
                     this.editing = false;
                 },
-        
-        
+
+
                 toggleDay(day) {
                     if (this.days.includes(day)) {
                         this.days = this.days.filter(d => d !== day);
@@ -326,10 +301,10 @@
                         this.days.push(day);
                     }
                 }
-        
+
             };
-        
+
         }
-        </script>
+    </script>
 
 @endsection

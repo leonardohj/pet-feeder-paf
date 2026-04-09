@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +11,9 @@
 </head>
 
 <body class="h-full m-0 flex flex-col">
-    <main class="flex-1 flex flex-col">
+    <main class="flex-1 flex flex-col overflow-y-hidden">
         @yield('body')
     </main>
 </body>
+
 </html>
