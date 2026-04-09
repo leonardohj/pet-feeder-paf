@@ -38,6 +38,28 @@ return new class extends Migration {
             $table->date('date');
             $table->time('hour');
         });
+
+        Schema::create('pets', function (Blueprint $table) {
+            $table->id();
+        
+            // Owner
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+        
+            // Optional feeder link
+            $table->foreignId('feeder_id')->nullable()->constrained()->cascadeOnDelete();
+        
+            // Pet info
+            $table->string('name');
+            $table->string('image')->nullable();
+            $table->string('species')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->decimal('weight', 5, 2)->nullable();
+            $table->date('birth_date')->nullable();
+            $table->text('notes')->nullable();
+        
+            // Laravel timestamps
+            $table->timestamps();
+        });
     }
 
     public function down(): void
