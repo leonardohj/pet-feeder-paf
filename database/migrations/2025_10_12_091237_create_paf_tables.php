@@ -67,5 +67,6 @@ return new class extends Migration {
         Schema::dropIfExists('feeding_logs');
         Schema::dropIfExists('schedules');
         Schema::dropIfExists('feeders');
+        Schema::dropIfExists('pets');
     }
 };
