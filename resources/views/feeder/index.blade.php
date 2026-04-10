@@ -10,51 +10,51 @@
 
     @if ($feeders->isEmpty())
       <!-- No feeders -->
-      <div class="items-center w-full max-w-2xl border-gray-50 border justify-between gap-6 p-4 bg-white rounded-2xl shadow-md">
-        <div class="flex flex-col m-2 p-2 justify-between items-center text-center md:text-left md:items-start flex-1">
-          <h2 class="text-lg font-semibold text-gray-800">
-            Não tens um alimentador associado à tua conta?
-          </h2>
-          <p class="text-gray-600 mb-4">
-            Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente.
-          </p>
-          <button 
-            class="bg-black hover:bg-gray-800 transition-colors w-full text-white font-medium px-6 py-3 rounded-xl"
-            @click="$dispatch('open-modal-associate-feeder')"
-          >
-            Associar alimentador
-          </button>
-        </div>
-      </div>
+<x-no-feeders title="Não tens um alimentador associado à tua conta?" text="Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente." click="$dispatch('open-modal-associate-feeder')" button_text="Associar alimentador"></x-no-feeders>
     @else
       <!-- Feeders list -->
-      <div class="flex w-full flex-wrap flex-row justify-center md:justify-start gap-6">
-        @foreach ($feeders as $feeder)
-          <div class="items-center w-full max-w-xs border-gray-50 border justify-between gap-6 p-4 bg-white rounded-2xl shadow-md">
-            <!-- Feeder Image -->
-            <img src="{{ asset('img/img.webp') }}" alt="img" class="h-60 w-full mb-1 scale-x-[-1]">
+<div class="flex w-full flex-wrap flex-row justify-center md:justify-start gap-8">
+    @foreach ($feeders as $feeder)
+        <div class="group relative flex flex-col w-full max-w-sm bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
+            
+            <div class="absolute top-4 right-4 z-10">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm border border-gray-100">
+                    <div class="{{ $feeder->status ? 'bg-green-500' : 'bg-red-500' }} h-2.5 w-2.5 rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-600">
+                        {{ $feeder->status ? 'Online' : 'Offline' }}
+                    </span>
+                </div>
+            </div>
 
-            <!-- Feeder Info Link -->
-            <a href="{{ route('feeder.show', ['feeder_id' => $feeder->id]) }}" class="border-t border-gray-300 flex flex-col gap-2">
-              <div class="text-lg mt-1">{{ $feeder->name }}</div>
+            <div class="relative h-56 w-full bg-gray-50 overflow-hidden">
+                <img src="{{ asset('img/img.webp') }}" 
+                     alt="{{ $feeder->name }}" 
+                     class="h-full w-full object-contain p-4 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/5 to-transparent"></div>
+            </div>
 
-              <!-- Status Indicator -->
-              <div class="flex gap-2 items-center text-sm">
-                Status:
-                <div class="{{ $feeder->status ? 'bg-green-500' : 'bg-red-500' }} h-4 w-4 rounded-full"></div>
-              </div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 transition-colors">
+                            {{ $feeder->name }}
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                            <x-mdi-clock-outline class="h-3 w-3"/>
+                            Última ativação: {{ $feeder->last_fed_at?->format('d/m/Y H:i') ?? 'Nunca' }}
+                        </p>
+                    </div>
+                </div>
 
-              <!-- Last Activation -->
-              <div class="text-sm">Última vez ativado: {{ $feeder->last_fed_at?->format('d/m/Y H:i') ?? 'nunca' }}</div>
-
-              <!-- Arrow -->
-              <div class="flex justify-end mt-2">
-                <x-radix-chevron-right class="h-5 w-5 text-gray-700"/>
-              </div>
-            </a>
-          </div>
-        @endforeach
-      </div>
+                <a href="{{ route('feeder.show', ['feeder_id' => $feeder->id]) }}" 
+                   class="mt-2 flex items-center justify-between w-full px-5 py-3 bg-gray-50 hover:bg-gray-800 rounded-2xl text-gray-700 hover:text-white transition-all duration-300 font-semibold">
+                    <span class="text-sm">Gerir Dispositivo</span>
+                    <x-radix-arrow-right class="h-5 w-5 transform group-hover:translate-x-1 transition-transform"/>
+                </a>
+            </div>
+        </div>
+    @endforeach
+</div>
     @endif
   </div>
 </div>

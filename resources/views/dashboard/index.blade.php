@@ -106,10 +106,10 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="text-gray-800 text-xs uppercase bg-gray-300">
-                            <th class="px-6 py-1.5 font-medium">{{ __('dashboard.date_time') ?? 'Data e Hora' }}</th>
-                            <th class="px-6 py-1 font-medium">{{ __('dashboard.equipment') ?? 'Equipamento' }}</th>
-                            <th class="px-6 py-1 font-medium text-right">{{ __('dashboard.dose') ?? 'Dose' }}</th>
+                        <tr class="text-gray-800 text-xs text-nowrap uppercase bg-gray-300">
+                            <th class="px-6 py-1.5 font-medium">{{ __('dashboard.date_time') }}</th>
+                            <th class="px-6 py-1 font-medium">{{ __('dashboard.equipment') }}</th>
+                            <th class="px-6 py-1 font-medium text-right">{{ __('dashboard.dose') }}</th>
                         </tr>
                     </thead>
 
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(!showAllLogs) logs = logs.slice(0,3);
 
         tableBody.innerHTML = logs.map(log => `
-            <tr class="hover:bg-gray-50 transition">
+            <tr class="hover:bg-gray-50 text-sm transition">
                 <td class="px-6 py-2">
                     <span class="font-medium text-gray-900">${log.date}</span>
                     <span class="text-gray-400 ml-2">${log.hour}</span>
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
                 <td class="px-6 py-2 text-right font-bold text-gray-800">${log.amount}g</td>
             </tr>
-        `).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-gray-400">{{ __("dashboard.no_logs_yet") }}</td></tr>';
+        `).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-sm text-gray-400">{{ __("dashboard.no_logs_yet") }}</td></tr>';
 
         const allLogs = feeders.flatMap(f => f.logs);
         const total = allLogs.reduce((s,l) => s+l.amount, 0);
@@ -245,22 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 @else
-<x-card>
-    <div class="flex flex-col m-2 p-2 justify-between items-center text-center md:text-left md:items-start flex-1">
-      <h2 class="text-lg font-semibold text-gray-800">
-        Não tens um alimentador associado à tua conta?
-      </h2>
-      <p class="text-gray-600 mb-4">
-        Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente.
-      </p>
-      <button 
-        class="bg-black hover:bg-gray-800 transition-colors w-full text-white font-medium px-6 py-3 rounded-xl"
-        @click="$dispatch('open-modal-associate-feeder')"
-      >
-        Associar alimentador
-      </button>
-    </div>
-</x-card>
+<x-no-feeders title="Não tens um alimentador associado à tua conta?" text="Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente." click="$dispatch('open-modal-associate-feeder')" button_text="Associar alimentador"></x-no-feeders>
+
 @endif
 
 @endsection

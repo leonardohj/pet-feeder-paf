@@ -4,5 +4,6 @@ return [
     'settings' => 'Configurações',
     'dashboard' => 'Estatisticas',
     'schedules' => 'Horários',
-    'feeders' => 'Alimentadores'
+    'feeders' => 'Alimentadores',
+    'pets' => 'Animais'
 ];

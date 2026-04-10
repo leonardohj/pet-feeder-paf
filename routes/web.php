@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Middleware\Language;
+use App\Http\Controllers\PetsController;
 use Illuminate\Http\Request;
 use App\Models\FeedingLog;
 use App\Models\Feeder;
@@ -41,6 +42,8 @@ Route::middleware(['web', Language::class])->group(function () {
             ->name('schedule.store');
         Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])
             ->name('schedule.update');
+        Route::resource('pets', PetsController::class);
+
     });
 
     Route::get('/admin', function () {

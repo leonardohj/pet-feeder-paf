@@ -92,6 +92,34 @@
     </div>
 
     <!-- MAIN LAYOUT -->
+    @php
+        $sections = [
+            [
+                'name' => __('navbar.dashboard'),
+                'icon' => 'home-outline',
+                'url' => route("home")
+            ],
+            [
+                'name' => __('navbar.feeders'),
+                'icon' => 'paw-outline',
+                'url' => route("feeder.index"),
+                'need_feeder' => true
+            ],
+            [
+                'name' => __('navbar.schedules'),
+                'icon' => 'calendar-clock-outline',
+                'url' => route("schedule"),
+                'need_feeder' => true
+            ],
+            [
+                'name' => __('navbar.settings'),
+                'icon' => 'cog',
+                'url' => route("settings.index")
+            ],
+
+
+        ]
+        @endphp
     <div class="flex-1 flex min-h-0 overflow-hidden">
 
         <!-- MOBILE SIDEBAR OVERLAY -->
@@ -108,77 +136,38 @@
                 </button>
                 <img src="{{ asset('img/logo_paf.png') }}" alt="" class="h-8 lg:h-12 ml-2">
             </div>
-
-            <a href="{{ url('/') }}"
-                class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200">
-                <x-mdi-home-outline class="h-8 w-8 flex-shrink-0" />
-                <span class="text-gray-700 font-medium">Homepage</span>
-            </a>
-
-            <a href="{{ url('/schedule') }}"
-                class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200">
-                <x-mdi-calendar-clock-outline class="h-8 w-8 flex-shrink-0" />
-                <span class="text-gray-700 font-medium">Horários</span>
-            </a>
-
-            <a href="{{ url('/feeder') }}"
-                class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200">
-                <x-mdi-paw-outline class="h-8 w-8 flex-shrink-0" />
-                <span class="text-gray-700 font-medium">Alimentadores</span>
-            </a>
-
-            <a href="{{ route('settings.index') }}"
-                class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200 cursor-pointer">
-                <x-mdi-cog class="h-8 w-8 flex-shrink-0" />
-                <span class="text-gray-700 font-medium">Configurações</span>
-            </a>
-        </div>
-
-        <!-- DESKTOP SIDEBAR -->
-        <div id="sidebar" :class="{ 'hover': sidebarOpen }"
-            class="hidden md:flex flex-col justify-start items-center pt-3 pb-2 bg-gray-50 px-4 gap-y-6 w-16 hover:w-56 transition-all not-hover:duration-1000 duration-600 not-hover:w-16 ease-in-out group min-h-screen">
-
-            <a href="{{ url('/') }}"
-                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-               {{ Request::is('/') ? 'bg-gray-300' : '' }}">
-                <x-mdi-home-outline class="h-8 w-8 flex-shrink-0" />
-                <span
-                    class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    {{ __('navbar.dashboard') }}
-                </span>
-            </a>
-
-            @if ($user->hasFeeders())
-                <a href="{{ url('/schedule') }}"
-                    class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-               {{ Request::is('schedule') ? 'bg-gray-300' : '' }}">
-                    <x-mdi-calendar-clock-outline class="h-8 w-8 flex-shrink-0" />
+            @foreach ($sections as $section)
+            @if(!isset($section['need_feeder']) || ($section['need_feeder'] && $user->hasFeeders()))
+                <a href="{{ $section['url'] }}"
+                   class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200
+                   {{ Request::url() === $section['url'] ? 'bg-gray-300' : '' }}">
+                    <x-dynamic-component :component="'mdi-' .$section['icon']" class="h-8 w-8 flex-shrink-0" />
                     <span
-                        class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                        {{ __('navbar.schedules') }}
-                    </span>
-                </a>
-
-                <a href="{{ url('/feeder') }}"
-                    class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-               {{ Request::is('feeder') ? 'bg-gray-300' : '' }}">
-                    <x-mdi-paw-outline class="h-8 w-8 flex-shrink-0" />
-                    <span
-                        class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                        {{ __('navbar.feeders') }}
+                        class="text-gray-700 font-medium">
+                        {{ $section['name'] }}
                     </span>
                 </a>
             @endif
+        @endforeach
+            
+        </div>
 
-            <a href="{{ route('settings.index') }}"
-                class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-                {{ Request::is('settings') ? 'bg-gray-300' : '' }}">
-                <x-mdi-cog class="h-8 w-8 flex-shrink-0" />
-                <span
-                    class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                    {{ __('navbar.settings') }}
-                </span>
-            </a>
+        <!-- DESKTOP SIDEBAR -->
+        <div id="sidebar" :class="{ 'hover': sidebarOpen, 'no-transition': noTransition }"
+            class="hidden md:flex flex-col justify-start items-center pt-3 pb-2 bg-gray-50 px-4 gap-y-6 w-16 hover:w-56 not-hover:duration-1000 duration-600 not-hover:w-16 ease-in-out group min-h-screen" x-cloak>
+            @foreach ($sections as $section)
+            @if(!isset($section['need_feeder']) || ($section['need_feeder'] && $user->hasFeeders()))
+                <a href="{{ $section['url'] }}"
+                   class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
+                   {{ Request::url() === $section['url'] ? 'bg-gray-300' : '' }}">
+                    <x-dynamic-component :component="'mdi-' .$section['icon']" class="h-8 w-8 flex-shrink-0" />
+                    <span
+                        class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+                        {{ $section['name'] }}
+                    </span>
+                </a>
+            @endif
+        @endforeach
         </div>
 
         <!-- CONTENT -->
@@ -204,9 +193,10 @@
                         </ul>
                     </div>
                 @endif
-
-                @yield('body')
-            </div>
+                    <div class="pb-15 md:pb-5">
+                        @yield('body')
+                    </div>
+                    </div>
 
         </div>
 
@@ -218,17 +208,43 @@
             display: none !important;
         }
 
+        .no-transition,
+        .no-transition *,
+        .no-transition *::before,
+        .no-transition *::after {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* sidebar forced open (when sidebarOpen = true) */
         #sidebar.hover {
             width: 14rem;
             transition: width 0.3s ease-in-out;
         }
 
+        /* items expand */
         #sidebar.hover .sidebar-item {
             width: 100%;
         }
 
+        /* show text */
         #sidebar.hover .sidebar-item span {
             opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* keep hover behaviour */
+        #sidebar:hover {
+            width: 14rem;
+        }
+
+        #sidebar:hover .sidebar-item {
+            width: 100%;
+        }
+
+        #sidebar:hover .sidebar-item span {
+            opacity: 1;
+            transform: translateX(0);
         }
     </style>
 
@@ -237,25 +253,46 @@
         function layout() {
             return {
                 sidebarOpen: false,
-                initialized: false, // <-- track first initialization
+                noTransition: false, // New property
+                initialized: false,
                 init() {
-                    const saved = sessionStorage.getItem('sidebarOpen')
-                    this.sidebarOpen = saved === 'true'
+                    const isDesktop = window.innerWidth >= 768;
+                    if (isDesktop) {
+                        const saved = sessionStorage.getItem('sidebarOpen');
+                        if (saved === 'true') {
+                            // Disable transitions temporarily
+                            this.noTransition = true;
+                            this.sidebarOpen = true;
 
-                    // Mark initialization done after state is set
-                    this.initialized = true
+                            // Re-enable transitions after the initial render
+                            this.$nextTick(() => {
+                                setTimeout(() => {
+                                    this.noTransition = false;
+                                }, 50);
+                            });
+                        }
+                    } else {
+                        this.sidebarOpen = false;
+                    }
+                    this.initialized = true;
+
+                    window.addEventListener('resize', () => {
+                        const desktop = window.innerWidth >= 768;
+                        if (desktop && sessionStorage.getItem('sidebarOpen') !== null) {
+                            this.sidebarOpen = sessionStorage.getItem('sidebarOpen') === 'true';
+                        } else if (!desktop) {
+                            this.sidebarOpen = false;
+                        }
+                    });
                 },
                 toggleSidebar(force = null) {
-                    if (force === null) {
-                        this.sidebarOpen = !this.sidebarOpen
-                    } else {
-                        this.sidebarOpen = force
+                    const isDesktop = window.innerWidth >= 768;
+                    if (force === null) this.sidebarOpen = !this.sidebarOpen;
+                    else this.sidebarOpen = force;
+
+                    if (isDesktop) {
+                        sessionStorage.setItem('sidebarOpen', this.sidebarOpen);
                     }
-                    sessionStorage.setItem('sidebarOpen', this.sidebarOpen)
-                },
-                sidebarTransitionClasses() {
-                    // Only apply transition if already initialized (user toggled)
-                    return this.initialized ? '' : 'transition-transform duration-300'
                 }
             }
         }

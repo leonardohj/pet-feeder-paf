@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Pet;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -9,21 +11,14 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\App;
 
 
-class AuthController
+class PetsController
 {
-    public function changeLang($langcode)
+    public function index(Request $request)
     {
-        App::setLocale($langcode);
-        session()->put("lang_code", $langcode);
+        $user = Auth::user();
+        $pets = Pet::where('id_user', $user->id)->get();
 
-        return redirect()->back();
-    }
-    public function showLogin(){
-        return view('auth.login');
-    }
-
-    public function showRegister(){
-        return view('auth.register');
+        return view('pets.index', ['pets' => $pets]);
     }
 
     public function register(Request $request)
