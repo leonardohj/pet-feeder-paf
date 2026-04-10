@@ -3,6 +3,7 @@
 
 @php
     $user = Auth::user();
+    $currentUrl = rtrim(url()->current(), '/');
 @endphp
 
 <head>
@@ -140,7 +141,7 @@
             @if(!isset($section['need_feeder']) || ($section['need_feeder'] && $user->hasFeeders()))
                 <a href="{{ $section['url'] }}"
                    class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200
-                   {{ Request::url() === $section['url'] ? 'bg-gray-300' : '' }}">
+                       {{ $currentUrl === rtrim($section['url'], '/') ? 'bg-gray-300' : '' }}">
                     <x-dynamic-component :component="'mdi-' .$section['icon']" class="h-8 w-8 flex-shrink-0" />
                     <span
                         class="text-gray-700 font-medium">
@@ -159,7 +160,7 @@
             @if(!isset($section['need_feeder']) || ($section['need_feeder'] && $user->hasFeeders()))
                 <a href="{{ $section['url'] }}"
                    class="sidebar-item not-hover:duration-1000 flex items-center w-12 hover:bg-gray-200 rounded-full px-2 py-2 transition-all duration-300 ease-in-out group-hover:w-full overflow-hidden cursor-pointer
-                   {{ Request::url() === $section['url'] ? 'bg-gray-300' : '' }}">
+                       {{ $currentUrl === rtrim($section['url'], '/') ? 'bg-gray-300' : '' }}">
                     <x-dynamic-component :component="'mdi-' .$section['icon']" class="h-8 w-8 flex-shrink-0" />
                     <span
                         class="text-gray-700 font-medium opacity-0 transform translate-x-[1rem] group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
