@@ -26,6 +26,8 @@ return [
     'enter_confirm_password' => 'Confirm your password',
     'already_has_account' => 'Already have an account?',
     'login' => 'Login',
+    'login_google' => 'Login with Google',
+    'register_google' => 'Register with Google',
     'doesnt_have_account' => "Doesn't have an account?",
     'do_register' => 'Create one!',
     'buy_product' => 'Buy product'

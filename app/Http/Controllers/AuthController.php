@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Str;
+use Laravel\Socialite\Socialite;
 
 class AuthController
 {
@@ -26,6 +27,38 @@ class AuthController
         return view('auth.register');
     }
 
+    public function redirect_google(Request $request)
+    {
+        return Socialite::driver('google')->redirect();
+    }
+    public function callback_google(Request $request)
+    {
+        $google_user = Socialite::driver('google')->stateless()->user();
+        
+        $user = User::where('email', $google_user->email)->first();
+    
+        if ($user) {
+    
+            if (!$user->google_id) {
+                $user->google_id = $google_user->id;
+                $user->save();
+            }
+    
+        } else {
+    
+            $user = User::create([
+                'name' => $google_user->name,
+                'email' => $google_user->email,
+                'google_id' => $google_user->id,
+                'password' => bcrypt(Str::random(24))
+            ]);
+    
+        }
+    
+        Auth::login($user);
+    
+        return redirect()->route('home');
+    }
     public function register(Request $request)
     {
         $validation = $request->validate([
