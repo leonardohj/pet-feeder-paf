@@ -48,9 +48,14 @@ class ScheduleController extends Controller
             'quantity' => 'required|integer|min:1',
             'type' => 'required|in:always,specific',
             'days' => 'nullable|array',
-            'days.*' => 'in:Seg,Ter,Qua,Qui,Sex,Sáb,Dom',
+            'days.*' => 'in:1,2,3,4,5,6,7',
         ]);
 
+        if($validated['type'] == 'always')
+        {
+            $validated['days'] = null;
+        }
+        
         try {
             // Check that feeder belongs to user
             $feeder = Feeder::where('id', $feeder_id)
@@ -82,9 +87,13 @@ class ScheduleController extends Controller
             'quantity' => 'required|integer|min:1',
             'type' => 'required|in:always,specific',
             'days' => 'nullable|array',
-            'days.*' => 'in:Seg,Ter,Qua,Qui,Sex,Sáb,Dom',
+            'days.*' => 'in:1,2,3,4,5,6,7',
         ]);
 
+        if($validated['type'] == 'always')
+        {
+            $validated['days'] = null;
+        }
         try {
             // verify feeder belongs to logged user
             $feeder = Feeder::where('id', $validated['feeder_id'])

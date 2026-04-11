@@ -62,8 +62,7 @@
 
                         </div>
                     </button>
-
-
+                    
                     <!-- Feeder schedules -->
                     <div x-show="expanded === {{ $feeder->id }}"
                         class="border-t border-gray-200 px-4 sm:px-5 py-3 sm:py-4">
@@ -76,35 +75,45 @@
                             <ul class="space-y-2 sm:space-y-3">
 
                                 @foreach ($feeder->schedules as $schedule)
-                                    <li class="flex justify-between items-center">
+                                <li class="flex justify-between items-center">
 
-                                        <div class="text-sm sm:text-base">
-
-                                            <div class="font-medium">
-                                                {{ $schedule->time }} —
-                                                {{ $schedule->type === 'always' ? 'Todos os dias' : implode(', ', $schedule->days) }}
-                                            </div>
-
-                                            <div class="text-gray-500">
-                                                Quantidade: {{ $schedule->quantity }}g
-                                            </div>
-
+                                    <div class="text-sm sm:text-base">
+                                        
+                                        <div class="font-medium">
+                                            {{ $schedule->time }} —
+                                            {{ $schedule->type === 'always'
+                                                ? 'Todos os dias'
+                                                : implode(', ',
+                                                    array_map(
+                                                        fn($day) => $day,
+                                                        array_intersect_key($days, array_flip($schedule->days))
+                                                    )
+                                                )
+                                            }}
                                         </div>
-
-                                        <button type="button"
-                                            class="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
-                                            @click="openModal(
-                                                {{ $schedule->id }},
-                                                {{ $feeder->id }},
-                                                '{{ $schedule->time }}',
-                                                {{ $schedule->quantity }},
-                                                '{{ $schedule->type }}',
-                                                {{ json_encode($schedule->days) }}
-                                            )">
-                                            Editar
-                                        </button>
-
-                                    </li>
+                                
+                                        <div class="text-gray-500">
+                                            Quantidade: {{ $schedule->quantity }}g
+                                        </div>
+                                
+                                    </div>
+                                
+                                    <button
+                                        type="button"
+                                        class="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
+                                        @click="openModal(
+                                            {{ $schedule->id }},
+                                            {{ $feeder->id }},
+                                            '{{ $schedule->time }}',
+                                            {{ $schedule->quantity }},
+                                            '{{ $schedule->type }}',
+                                            {{ json_encode($schedule->days) }}
+                                        )"
+                                    >
+                                        Editar
+                                    </button>
+                                
+                                </li>
                                 @endforeach
 
                             </ul>
@@ -182,11 +191,11 @@
                             @foreach ($days as $key => $day)
                                 <label class="cursor-pointer relative">
                                     <input type="checkbox" name="days[]" value="{{ $key }}"
-                                        :checked="days.includes('{{ $day }}')"
-                                        @click="toggleDay('{{ $day }}')" class="sr-only">
+                                        :checked="days.includes('{{ $key }}')"
+                                        @click="toggleDay('{{ $key }}')" class="sr-only">
 
                                     <span
-                                        :class="days.includes('{{ $day }}') ?
+                                        :class="days.includes('{{ $key }}') ?
                                             'bg-gray-900 text-white' :
                                             'bg-gray-200 text-gray-700 hover:bg-gray-300'"
                                         class="px-1 py-2 rounded-full transition duration-200 ease-in-out text-center w-full block select-none">
