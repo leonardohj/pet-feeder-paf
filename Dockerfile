@@ -35,6 +35,7 @@ RUN php artisan config:clear && \
     php artisan view:clear
 
 RUN composer require codeat3/blade-radix-icons && \
-    composer require postare/blade-mdi
+    composer require postare/blade-mdi && \
+    composer require laravel/socialite
 
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
