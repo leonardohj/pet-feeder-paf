@@ -50,7 +50,8 @@ class AuthController
                 'name' => $google_user->name,
                 'email' => $google_user->email,
                 'google_id' => $google_user->id,
-                'password' => bcrypt(Str::random(24))
+                'password' => bcrypt(Str::random(24)),
+                'avatar' => $google_user->avatar
             ]);
     
         }

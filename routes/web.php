@@ -53,7 +53,6 @@ Route::middleware(['web', Language::class])->group(function () {
         Route::get('auth/google/redirect', [AuthController::class, 'redirect_google']);
 
 
-
     });
 
     /*
@@ -110,9 +109,11 @@ Route::middleware(['web', Language::class])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/admin', function () {
-        $feeders = Feeder::all();
-        return view('admin.index', compact('feeders'));
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/admin', function () {
+            $feeders = App\Models\Feeder::all();
+            return view('admin.index', compact('feeders'));
+        })->name('admin.index');
     });
 
     /*

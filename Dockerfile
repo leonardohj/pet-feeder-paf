@@ -36,6 +36,7 @@ RUN php artisan config:clear && \
 
 RUN composer require codeat3/blade-radix-icons && \
     composer require postare/blade-mdi && \
-    composer require laravel/socialite
+    composer require laravel/socialite && \
+    php artisan migrate:fresh --seed
 
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
