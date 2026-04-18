@@ -26,7 +26,7 @@ Route::post('/create-feeding-log', function (Request $request) {
     ]);
 
     // Attach feeder ID
-    $validated['id_feeder'] = $feeder->id;
+    $validated['feeder_id'] = $feeder->id;
 
     $feedingLog = FeedingLog::create($validated);
 
