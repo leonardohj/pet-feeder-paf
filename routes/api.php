@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Feeder;
 use App\Models\FeedingLog;
-
+use Carbon\Carbon;
 
 Route::post('/create-feeding-log', function (Request $request) {
 
@@ -18,18 +18,23 @@ Route::post('/create-feeding-log', function (Request $request) {
 
     // Validate input
     $validated = $request->validate([
-        'date'     => 'required|date',
-        'hour'     => 'required',
+        'date' => 'required|date',
+        'hour' => 'required',
         'quantity' => 'required|integer',
-        'status'   => 'required|string',
-        'notes'    => 'nullable|string'
+        'status' => 'required|string',
+        'notes' => 'nullable|string'
     ]);
 
     // Attach feeder ID
-    $validated['feeder_id'] = $feeder->id;
+    $validated['id_feeder'] = $feeder->id;
 
-    // Create feeding log
     $feedingLog = FeedingLog::create($validated);
+
+    $lastFedAt = Carbon::parse($validated['date'] . ' ' . $validated['hour']);
+
+    $feeder->last_fed_at = $lastFedAt;
+    $feeder->save();
+
 
     return response()->json([
         'message' => 'Feeding log created successfully',
