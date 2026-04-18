@@ -100,6 +100,8 @@ class ApiController extends Controller
 
         $feedingLog = FeedingLog::create($validated);
 
+        $feeder->last_fed_at = $validated['date'] . ' ' . $validated['hour'];
+
         return response()->json($feedingLog, 201);
     }
 }
