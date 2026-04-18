@@ -80,28 +80,30 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json(['ola' => 'adeus']);
-
-
+        $token = $request->bearerToken();
+    
+        $feeder = Feeder::where('device_token', $token)->first();
+    
         if (!$feeder) {
             return response()->json([
                 'error' => 'Invalid or missing token'
             ], 401);
         }
-
+    
         $validated = $request->validate([
             'date' => 'required|string',
             'hour' => 'required|string',
             'quantity' => 'required|integer',
             'status' => 'required|string'
         ]);
-
+    
         $validated['id_feeder'] = $feeder->id;
-
+    
         $feedingLog = FeedingLog::create($validated);
-
+    
         $feeder->last_fed_at = $validated['date'] . ' ' . $validated['hour'];
-
+        $feeder->save();
+    
         return response()->json($feedingLog, 201);
     }
 }
