@@ -30,8 +30,9 @@ Route::post('/create-feeding-log', function (Request $request) {
 
     $feedingLog = FeedingLog::create($validated);
 
-    $lastFedAt = Carbon::createFromFormat('Y-m-d H:i', $validated['date'] . ' ' . $validated['hour']);
-
+    $lastFedAt = Carbon::createFromFormat('Y-m-d H:i', $validated['date'] . ' ' . $validated['hour'])
+    ->setSecond(0);
+    
     $feeder->last_fed_at = $lastFedAt;
     $feeder->save();
 

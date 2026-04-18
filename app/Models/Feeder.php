@@ -21,7 +21,7 @@ class Feeder extends Model
     ];
 
     protected $casts = [
-        'last_fed_at' => 'date',
+        'last_fed_at' => 'datetime:Y-m-d H:i',
         'status' => 'boolean',
     ];
 
