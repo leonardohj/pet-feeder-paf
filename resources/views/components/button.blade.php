@@ -6,4 +6,4 @@
     'type' => 'button',
     'click' =>  null
 ])
-<button id="{{$id}}" @if(!empty($click)) @click="{{ $click }}" @endif type="{{ $type }}" class="mt-5  p-3 rounded-xl {{ $text_color }} w-full {{ $borders  }} border max-w-3xl font-semibold cursor-pointer {{ $color }}">{{ $slot }}</button>
+<button id="{{$id}}" @if(!empty($click)) @click="{{ $click }}" @endif type="{{ $type }}" class="p-3 rounded-xl {{ $text_color }} w-full {{ $borders  }} border max-w-3xl font-semibold cursor-pointer {{ $color }}">{{ $slot }}</button>

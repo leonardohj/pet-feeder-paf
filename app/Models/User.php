@@ -56,4 +56,8 @@ class User extends Authenticatable
             return $feeder->hasLogs();
         });
     }
+    public function getRole()
+    {
+        return $this->role;
+    }
 }

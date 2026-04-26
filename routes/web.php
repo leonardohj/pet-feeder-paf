@@ -83,12 +83,16 @@ Route::middleware(['web', Language::class])->group(function () {
 
         Route::get('/feeder/show/{feeder_id}', [FeederController::class, 'show'])
             ->name('feeder.show');
+        Route::get('/feeder/edit/{feeder_id}', [FeederController::class, 'edit'])
+            ->name('feeder.edit');
 
         Route::post('/feeder', [FeederController::class, 'store'])
             ->name('feeder.create');
 
         Route::post('/feeder/link', [FeederController::class, 'linkingFeederUser'])
             ->name('feeder.linkUser');
+        Route::post('/feeder/update/{feeder_id}', [FeederController::class, 'update'])
+            ->name('feeder.update');
 
         Route::get('/schedule', [ScheduleController::class, 'index'])
             ->name('schedule');
@@ -111,7 +115,7 @@ Route::middleware(['web', Language::class])->group(function () {
 
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin', function () {
-            $feeders = App\Models\Feeder::all();
+            $feeders = App\Models\Feeder::paginate(10);
             return view('admin.index', compact('feeders'));
         })->name('admin.index');
     });

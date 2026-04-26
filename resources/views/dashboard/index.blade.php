@@ -18,12 +18,26 @@
     <div class="max-w-7xl mx-auto space-y-6">
         
         <div class="grid grid-cols-2 md:grid-rows-1 grid-rows-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-3 mb:p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-gray-500">{{ __('dashboard.total_consumed') }}</p>
-                    <div class="hidden md:block p-2 bg-green-50 rounded-lg"><i class="fas fa-weight-hanging text-green-600"></i></div>
+                    
+                    <!-- LEFT -->
+                    <div class="flex flex-col">
+                        <p class="text-sm font-medium text-gray-500">
+                            {{ __('dashboard.total_consumed') }}
+                        </p>
+            
+                        <p id="totalFeed" class="text-2xl font-bold text-gray-900 mt-2">
+                            0g
+                        </p>
+                    </div>
+            
+                    <!-- RIGHT (IMAGE) -->
+                    <div class="flex items-center justify-center">
+                        <img src="{{ asset('img/food.png') }}" class="h-15entr w-15 object-contain">
+                    </div>
+            
                 </div>
-                <p id="totalFeed" class="text-2xl font-bold text-gray-900 mt-2">0g</p>
             </div>
             <div class="bg-white p-3 mb:p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between">

@@ -1,21 +1,22 @@
 @props([
-    'label' => 'No label',
+    'label' => '',
     'name' => 'none',
     'type' => 'text',
     'placeholder' => '',
+    'value' => ''
 ])
 <div class="w-full">
     @if(!empty($label))
-        <label for="{{ $name ?? '' }}" class="block mb-1 font-medium text-gray-700 text-sm">{{ $label }}</label>
+        <label for="{{ $name ?? '' }}" class="block font-medium text-gray-700 text-sm">{{ $label }}</label>
     @endif
 
-    <div class="@if($type == 'password') flex items-center gap-3 @endif rounded-full px-3 py-1 border-gray-200 border w-full max-w-2xl @error($name) border-red-500 @enderror">
+    <div class="@if($type == 'password') mt-1 flex items-center gap-3 @endif rounded-full px-3 py-1 border-gray-200 border w-full max-w-2xl @error($name) border-red-500 @enderror">
         <input 
             name="{{ $name ?? '' }}" 
             id="{{ $name ?? '' }}" 
             type="{{ $type ?? 'text' }}" 
             placeholder="{{ $placeholder ?? '' }}" 
-            value="{{ old($name) }}" 
+            value="{{ old($name) ?? $value }}" 
             {{ $attributes->merge(['autocomplete' => $autocomplete ?? '']) }}
             {{ $attributes->merge(['class' => 'outline-0 w-full max-w-2xl py-1 bg-transparent placeholder-gray-400']) }}
         >

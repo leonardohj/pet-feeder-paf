@@ -2,71 +2,102 @@
 
 @section('body')
 
-<div class="px-5 py-2 w-full">
-  <div class="flex w-full flex-wrap flex-row justify-center md:justify-start gap-3">
+<div class="px-5 w-full flex flex-col">
+  
+  <div class="ml-auto w-full max-w-3xs px-3 sm:px-5">
+    <form action="{{ route('feeder.create') }}" method="POST">
+      @csrf
 
-    @if(isset($feeders))
-      @foreach($feeders as $feeder)
+      <x-button type="submit">
+        + Criar feeder
+      </x-button>
 
-        <div class="items-center w-full max-w-xs border-gray-50 border justify-between gap-6 p-4 bg-white rounded-2xl shadow-md">
-
-          <img src="{{ asset('img/img.webp') }}" alt="img" class="h-60 w-full scale-x-[-1]">
-
-          <div class="text-lg uppercase text-gray-500 text-center my-1">
-            IMAGEM ILUSTRATIVA
-          </div>
-
-          <div class="border-t border-gray-300 pt-3">
-
-            {{-- Show every feeder attribute --}}
-            @foreach($feeder->toArray() as $key => $value)
-
-              <div class="text-sm flex justify-between border-b border-gray-100 py-1">
-                <span class="font-medium text-gray-600">
-                  {{ ucfirst(str_replace('_',' ',$key)) }}
-                </span>
-
-                <span class="text-gray-800">
-                  {{ $value === null || $value === '' ? 'null' : $value }}
-                </span>
-              </div>
-
-            @endforeach
-
-          </div>
-
-        </div>
-
-      @endforeach
-    @endif
-
+    </form>
   </div>
+<x-card :max_width="false">
+  <div class="flex flex-col gap-3">
+    <div class="overflow-x-auto">
+        <table class="min-w-full h-full divide-y divide-gray-300">
 
+            <thead>
+                <tr>
+                    <th scope="col"
+                        class="py-3.5 pl-0 pr-3 text-left text-sm font-semibold text-gray-900">
+                        ID
+                    </th>
 
-  <div class="flex justify-center items-center mt-6">
+                    <th scope="col"
+                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        Name
+                    </th>
 
-    <div class="flex flex-col md:flex-row items-center max-w-3xl border-gray-50 border justify-between gap-6 p-4 bg-white rounded-2xl shadow-md">
+                    <th scope="col"
+                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        Code
+                    </th>
 
-      <form action="{{ route('feeder.create') }}" method="POST">
-        @csrf
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 text-right w-12">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
 
-        <button class="bg-black hover:bg-gray-800 transition-colors w-full text-white font-medium px-6 py-3 rounded-xl">
-          + Criar feeder
-        </button>
+            <tbody class="divide-y divide-gray-200">
+                @forelse ($feeders as $feeder)
+                    <x-clickable-table-row href="#">
 
-      </form>
+                        <td class="whitespace-nowrap py-4 pl-0 pr-3 text-sm font-medium text-gray-900">
+                            {{ $feeder->id }}
+                        </td>
 
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {{ $feeder->name }}
+                        </td>
+
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">
+                            {{ $feeder->code }}
+                        </td>
+
+                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm"
+                            onclick="event.stopPropagation()">
+
+                            <div class="inline-flex items-center gap-4">
+                                {{-- actions (opcional) --}}
+                                <a href="{{route('feeder.show', ['feeder_id' => $feeder->id])}}"
+                                   class="text-gray-400 hover:text-gray-800">
+                                    view
+                                </a>
+
+                                <a href="{{route('feeder.edit', ['feeder_id' => $feeder->id])}}"
+"
+                                   class="text-gray-400 hover:text-gray-800">
+                                    edit
+                                </a>
+                            </div>
+
+                        </td>
+
+                    </x-clickable-table-row>
+                @empty
+                    <tr>
+                        <td colspan="4">
+                            <div class="flex justify-center items-center text-sm py-6 text-gray-500">
+                                Não existem feeders
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+
+        </table>
     </div>
-
-  </div>
 </div>
 
-<script>
-  const buttonAssociateFeeder = document.getElementById('buttonAssociateFeeder');
+  <div class="mt-4">
+    {{ $feeders->links() }}
+  </div>
 
-  if(buttonAssociateFeeder){
-    buttonAssociateFeeder.addEventListener('click', openModalAssociateFeeder);
-  }
-</script>
+</div>
+</x-card>
 
 @endsection
