@@ -88,6 +88,15 @@
                     </div>
                 </form>
             </div>
+            <div class="flex justify-center items-center w-full p-5 mx-auto max-w-2xl">
+                <x-select label="{{ __('settings.language') }}" name="language" onchange="changeLanguage(this.value)"
+                :options="['en' => 'English', 'pt' => 'Português']" :selected="app()->getLocale()" />
+        <script>
+            function changeLanguage(lang) {
+                window.location = '{{ url('change-language') }}/' + lang;
+            }
+        </script> 
+            </div>
         </div>
 
         <div class="hidden lg:flex flex-1 min-h-0 bg-gray-50 flex-col">
