@@ -68,7 +68,7 @@
 
         </x-card>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
             <div class="px-6 py-2 bg-gray-700">
                 <h3 class="font-bold text-white uppercase text-xs tracking-wider">
