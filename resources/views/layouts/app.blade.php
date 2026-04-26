@@ -158,7 +158,6 @@
                         <a href="{{ $section['url'] }}"
                             class="sidebar-item flex items-center w-full gap-2 px-2 py-2 rounded-full hover:bg-gray-200
                     {{ Request::url() === $section['url'] ? 'bg-gray-300' : '' }}">
-                    {{ Request::url() . ' ' . $section['url'] }}
                             <x-dynamic-component :component="'mdi-' . $section['icon']" class="h-8 w-8 flex-shrink-0" />
 
                             <span class="text-gray-700 font-medium">
