@@ -40,13 +40,12 @@
                 <x-show-inputs :admin="true" :way="$way" name="device_code" :label="__('feeder.device_code')"
                     :value="$feeder->code"></x-show-inputs>
 
-                <x-show-inputs name="pet_type" :label="__('feeder.pet_type')" :value="$feeder->pet_type"></x-show-inputs>
+                <x-show-inputs name="model" :label="__('feeder.model')" :value="$feeder->pet_type"></x-show-inputs>
                 <x-show-inputs name="last_fed_at" :label="__('feeder.last_fed_at')" :value="$feeder->last_fed_at"></x-show-inputs>
                 <x-show-inputs name="associated_at" :label="__('feeder.associated_at')" :value="$feeder->updated_at"></x-show-inputs>
                 @if (auth()->user()->getRole() == 'admin')
                     <x-show-inputs :way="$way" name="device_token" :label="__('feeder.device_token')"
                         :value="$feeder->device_token"></x-show-inputs>
-
                 @endif
             </div>
             <div class="mt-2">
@@ -54,10 +53,9 @@
                     <a href="{{ route('feeder.edit', ['feeder_id' => $feeder->id]) }}">
                         <x-button>{{ __('feeder.edit_feeder') }}</x-button>
                     </a>
-                    @else
+                @else
                     <x-button type="submit">{{ __('feeder.complete') }}</x-button>
-
-                    @endif
+                @endif
 
             </div>
             @if ($way === 'edit')
@@ -67,6 +65,8 @@
 
 
         </x-card>
+<div class="m-4">
+
 
         <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
@@ -113,6 +113,10 @@
             </div>
 
         </div>
+        </div>
+        <x-card class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <x-button>{{__('feeder.manually_feed')}}</x-button>
+        </x-card>
 
     </div>
 @endsection

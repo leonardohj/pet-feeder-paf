@@ -17,50 +17,78 @@
 <div class="px-6" x-cloak>
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <div class="grid grid-cols-2 md:grid-rows-1 grid-rows-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between">
-                    
-                    <!-- LEFT -->
-                    <div class="flex flex-col">
-                        <p class="text-sm font-medium text-gray-500">
-                            {{ __('dashboard.total_consumed') }}
-                        </p>
+        <div class="grid grid-cols-2 md:grid-rows-1 grid-rows-2 md:grid-cols-3 gap-4">
+
+                <!-- CARD -->
+                <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between">
             
-                        <p id="totalFeed" class="text-2xl font-bold text-gray-900 mt-2">
-                            0g
-                        </p>
+                        <!-- LEFT -->
+                        <div class="flex flex-col">
+                            <p class="text-sm font-medium text-gray-500">
+                                {{ __('dashboard.total_consumed') }}
+                            </p>
+            
+                            <p id="totalFeed" class="text-2xl font-bold text-gray-900 mt-2">
+                                0g
+                            </p>
+                        </div>
+            
+                        <!-- RIGHT -->
+                        <div class="flex items-center justify-center">
+                            <img src="{{ asset('img/food.png') }}" class="h-15 w-15 object-contain">
+                        </div>
+            
                     </div>
+                </div>
             
-                    <!-- RIGHT (IMAGE) -->
-                    <div class="flex items-center justify-center">
-                        <img src="{{ asset('img/food.png') }}" class="h-15entr w-15 object-contain">
+                <!-- CARD -->
+                <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between">
+            
+                        <div class="flex flex-col">
+                            <p class="text-sm font-medium text-gray-500">
+                                {{ __('dashboard.avg_per_dose') }}
+                            </p>
+            
+                            <p id="avgFeed" class="text-2xl font-bold text-gray-900 mt-2">
+                                0g
+                            </p>
+                        </div>
+            
+                        <div class="flex items-center justify-center">
+                            <img src="{{ asset('img/grafico.png') }}" class="h-15 w-15 object-contain">
+                        </div>
+            
                     </div>
+                </div>
             
+                <!-- CARD -->
+                <div class="bg-white p-3 sm:p-6 md:col-span-1 col-span-2 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between">
+            
+                        <div class="flex flex-col">
+                            <p class="text-sm font-medium text-gray-500">
+                                {{ __('dashboard.feeds') }}
+                            </p>
+            
+                            <p id="feedCount" class="text-2xl font-bold text-gray-900 mt-2">
+                                0
+                            </p>
+                        </div>
+            
+                        <div class="flex items-center justify-center">
+                            <img id="catImage" src="{{ asset('img/sad_cat.png') }}" class="h-15 w-15 object-contain">
+                        </div>
+            
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white p-3 mb:p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-gray-500">{{ __('dashboard.avg_per_dose') }}</p>
-                    <div class="p-2 hidden md:block bg-blue-50 rounded-lg"><i class="fas fa-chart-line text-blue-600"></i></div>
-                </div>
-                <p id="avgFeed" class="text-2xl font-bold text-gray-900 mt-2">0g</p>
-            </div>
-            <div class="bg-white  p-3 mb:p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-gray-500">{{ __('dashboard.feeds') }}</p>
-                    <div class="p-2 hidden md:block bg-purple-50 rounded-lg"><i class="fas fa-utensils text-purple-600"></i></div>
-                </div>
-                <p id="feedCount" class="text-2xl font-bold text-gray-900 mt-2">0</p>
-            </div>
-            <div class="bg-white  p-3 mb:p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-gray-500">{{ __('dashboard.status') }}</p>
-                    <div class="p-2 hidden md:block bg-orange-50 rounded-lg"><i class="fas fa-signal text-orange-600"></i></div>
-                </div>
-                <p class="text-lg font-bold text-gray-900 mt-2">Online</p>
-            </div>
+            
+                <!-- CARD -->
+            
         </div>
+
+        
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -198,45 +226,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateUI(){
 
-        const feeder = feeders[currentFeederIndex];
-        document.getElementById('currentFeederName').innerText = feeder.name;
+const feeder = feeders[currentFeederIndex];
+document.getElementById('currentFeederName').innerText = feeder.name;
 
-        const dataByDay = new Array(7).fill(0);
-        feeder.logs.forEach(log=>{
-            const dayIdx = new Date(log.date).getDay();
-            dataByDay[dayIdx] += log.amount;
-        });
+const dataByDay = new Array(7).fill(0);
+feeder.logs.forEach(log=>{
+    const dayIdx = new Date(log.date).getDay();
+    dataByDay[dayIdx] += log.amount;
+});
 
-        const feederColor = pizzaChart.data.datasets[0].backgroundColor[currentFeederIndex];
-        feedingChart.data.datasets[0].data = dataByDay;
-        feedingChart.data.datasets[0].backgroundColor = feederColor;
-        feedingChart.update();
+const feederColor = pizzaChart.data.datasets[0].backgroundColor[currentFeederIndex];
+feedingChart.data.datasets[0].data = dataByDay;
+feedingChart.data.datasets[0].backgroundColor = feederColor;
+feedingChart.update();
 
-        const tableBody = document.getElementById('feedTableBody');
-        let logs = [...feeder.logs].reverse();
-        if(!showAllLogs) logs = logs.slice(0,3);
+const tableBody = document.getElementById('feedTableBody');
+let logs = [...feeder.logs].reverse();
+if(!showAllLogs) logs = logs.slice(0,3);
 
-        tableBody.innerHTML = logs.map(log => `
-            <tr class="hover:bg-gray-50 text-sm transition">
-                <td class="px-6 py-2">
-                    <span class="font-medium text-gray-900">${log.date}</span>
-                    <span class="text-gray-400 ml-2">${log.hour}</span>
-                </td>
-                <td class="px-6 py-2">
-                    <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span>
-                </td>
-                <td class="px-6 py-2 text-right font-bold text-gray-800">${log.amount}g</td>
-            </tr>
-        `).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-sm text-gray-400">{{ __("dashboard.no_logs_yet") }}</td></tr>';
+tableBody.innerHTML = logs.map(log => `
+    <tr class="hover:bg-gray-50 text-sm transition">
+        <td class="px-6 py-2">
+            <span class="font-medium text-gray-900">${log.date}</span>
+            <span class="text-gray-400 ml-2">${log.hour}</span>
+        </td>
+        <td class="px-6 py-2">
+            <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md">${log.feeder}</span>
+        </td>
+        <td class="px-6 py-2 text-right font-bold text-gray-800">${log.amount}g</td>
+    </tr>
+`).join('') || '<tr><td colspan="3" class="px-6 py-2 text-center text-sm text-gray-400">{{ __("dashboard.no_logs_yet") }}</td></tr>';
 
-        const allLogs = feeders.flatMap(f => f.logs);
-        const total = allLogs.reduce((s,l) => s+l.amount, 0);
-        const count = allLogs.length;
+const allLogs = feeders.flatMap(f => f.logs);
+const total = allLogs.reduce((s,l) => s+l.amount, 0);
+const count = allLogs.length;
 
-        document.getElementById('totalFeed').innerText = `${total.toLocaleString()}g`;
-        document.getElementById('avgFeed').innerText = `${count>0 ? (total/count).toFixed(1) : 0}g`;
-        document.getElementById('feedCount').innerText = count;
-    }
+document.getElementById('totalFeed').innerText = `${total.toLocaleString()}g`;
+document.getElementById('avgFeed').innerText = `${count>0 ? (total/count).toFixed(1) : 0}g`;
+document.getElementById('feedCount').innerText = count;
+
+// 👇 NEW LOGIC FOR CAT IMAGE
+const catImage = document.getElementById('catImage');
+
+if(count > 80){
+    catImage.src = "{{ asset('img/happy_cat.png') }}";
+}else if(count > 45){
+    catImage.src = "{{ asset('img/normal_cat.png') }}";
+}else{
+    catImage.src = "{{ asset('img/sad_cat.png') }}";
+}
+}
 
     document.getElementById('prevFeeder').addEventListener('click',()=>{
         currentFeederIndex = (currentFeederIndex - 1 + feeders.length) % feeders.length;
