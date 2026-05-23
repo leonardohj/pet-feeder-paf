@@ -14,5 +14,7 @@ return [
     'login' => 'Entrar',
     'doesnt_have_account' => 'Não tem conta?',
     'do_register' => 'Fazer registo',
-    'buy_product' => 'Comprar produto'
+    'buy_product' => 'Comprar produto',
+    'login_google' => 'Iniciar sessão com Google',
+    'register_google' => 'Registo com Google',
 ];

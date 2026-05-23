@@ -298,7 +298,7 @@ if(count > 80){
 </script>
 
 @else
-<x-no-feeders title="Não tens um alimentador associado à tua conta?" text="Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente." click="$dispatch('open-modal-associate-feeder')" button_text="Associar alimentador"></x-no-feeders>
+<x-no-feeders title="{{ __('feeder.no_feeder_associated_yet') }}" text="{{__('feeder.associate_feeder_monotorize')}}" click="$dispatch('open-modal-associate-feeder')" button_text="{{ __('feeder.associate_feeder') }}"></x-no-feeders>
 
 @endif
 

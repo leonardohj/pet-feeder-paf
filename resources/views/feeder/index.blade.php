@@ -10,7 +10,7 @@
 
     @if ($feeders->isEmpty())
       <!-- No feeders -->
-<x-no-feeders title="Não tens um alimentador associado à tua conta?" text="Associa um alimentador para começares a monitorizar e gerir a alimentação facilmente." click="$dispatch('open-modal-associate-feeder')" button_text="Associar alimentador"></x-no-feeders>
+<x-no-feeders title="{{ __('feeder.no_feeder_associated_yet') }}" text="{{__('feeder.associate_feeder_monotorize')}}" click="$dispatch('open-modal-associate-feeder')" button_text="{{ __('feeder.associate_feeder') }}"></x-no-feeders>
     @else
       <!-- Feeders list -->
 <div class="flex w-full flex-wrap flex-row justify-center md:justify-start gap-8">
@@ -41,14 +41,14 @@
                         </h3>
                         <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
                             <x-mdi-clock-outline class="h-3 w-3"/>
-                            Última ativação: {{ $feeder->last_fed_at?->format('d/m/Y H:i') ?? 'Nunca' }}
+                            {{ __('feeder.last_fed_at') }}: {{ $feeder->last_fed_at?->format('d/m/Y H:i') ?? __('feeder.never') }}
                         </p>
                     </div>
                 </div>
 
                 <a href="{{ route('feeder.show', ['feeder_id' => $feeder->id]) }}" 
                    class="mt-2 flex items-center justify-between w-full px-5 py-3 bg-gray-50 hover:bg-gray-800 rounded-2xl text-gray-700 hover:text-white transition-all duration-300 font-semibold">
-                    <span class="text-sm">Gerir Dispositivo</span>
+                    <span class="text-sm">{{ __('feeder.manage_feeder') }}</span>
                     <x-radix-arrow-right class="h-5 w-5 transform group-hover:translate-x-1 transition-transform"/>
                 </a>
             </div>

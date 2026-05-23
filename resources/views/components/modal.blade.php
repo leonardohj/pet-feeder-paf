@@ -14,11 +14,11 @@
             </button>
 
             <h2 class="text-xl md:text-2xl font-bold mb-4 text-center md:text-left">
-                Associar Alimentador
+                {{ __('modal.associate_feeder') }}
             </h2>
 
             <p class="text-gray-600 mb-6 text-sm md:text-base">
-                Insere o ID do alimentador ou usa a câmara para ler o QR code.
+                {{ __('modal.info') }}
             </p>
 
             <form action="{{ route('feeder.linkUser') }}" method="POST" class="space-y-4">
@@ -26,7 +26,7 @@
 
                 <div class="relative">
 
-                    <input id="feederCodeInput" name="code" type="text" placeholder="ID do alimentador"
+                    <input id="feederCodeInput" name="code" type="text" placeholder="{{__('modal.id_feeder')}}"
                         class="w-full py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" />
 
                     <button type="button" @click="openScanner()"
@@ -37,7 +37,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-900 transition">
-                    Associar
+                    {{__('modal.associate')}}
                 </button>
 
             </form>
@@ -57,7 +57,7 @@
             </button>
 
             <h3 class="text-center font-semibold mb-3">
-                Scan QR Code
+                {{ __('modal.scan_qr_code') }}
             </h3>
 
             <!-- SCANNER CONTAINER -->

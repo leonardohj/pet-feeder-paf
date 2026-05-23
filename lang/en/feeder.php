@@ -10,5 +10,10 @@ return [
 
     'edit_feeder' => 'Edit Feeder',
     'complete' => 'Save',
-    'manually_feed' => 'Feed Manually'
+    'manually_feed' => 'Feed Manually',
+    'manage_feeder' => 'Manage feeder',
+    'never' => 'Never',
+    'no_feeder_associated_yet' => 'Don’t have a feeder associated with your account yet?',
+    'associate_feeder_monotorize' => 'Associate a feeder to start monitoring and managing feeding easily.',
+    'associate_feeder' => 'Associate feeder',
 ];

@@ -35,7 +35,7 @@
             </div>
         </div>
     </section>
-     <section class="mt-16 lg:mt-32 px-4 sm:px-8 md:px-16 lg:px-32 flex flex-col items-center">
+     {{-- <section class="mt-16 lg:mt-32 px-4 sm:px-8 md:px-16 lg:px-32 flex flex-col items-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center">
             Introducing our Pet Feeder Smart System
         </h2>
@@ -77,6 +77,6 @@
                 </div>
             </div>
         </div>
-        </section>
+        </section> --}}
 </div>
 </html>

@@ -10,11 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>paf</title>
+    <title>Pet Feeder</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('scripts')
-
+    <link rel="icon" type="image/png" href="{{ asset('favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="PetFeeder" />
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}" />
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 </head>
@@ -86,14 +91,14 @@
 
 
                             <div class="text-center mt-2 text-lg">
-                                Olá, {{ Auth::user()->name }}
+                                {{ __('user.hello') }}, {{ Auth::user()->name }}
                             </div>
 
                             <form action="{{ route('logout') }}" method="POST" class="mt-4">
                                 @csrf
                                 <button type="submit"
                                     class="w-full rounded-xl bg-gray-200 py-2 hover:bg-gray-300 transition">
-                                    Sair da conta
+                                    {{ __('user.leave_account') }}
                                 </button>
                             </form>
                         </div>
