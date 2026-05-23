@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt">
+@extends('layouts.auth')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    @vite('resources/css/app.css')
-
-    @yield('scripts')
-
-    <title>paf</title>
-
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-</head>
-
-<body>
+@section('body')
     <!-- Header -->
     <div class="border-b border-gray-300">
         <x-header2 />
@@ -107,6 +92,4 @@
         </div>
     </section>
     --}}
-</body>
-
-</html>
+@endsection
