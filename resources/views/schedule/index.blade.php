@@ -52,7 +52,8 @@
 
                             <span
                                 class="text-xs sm:text-sm font-semibold {{ $feeder->status == 1 ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $feeder->status == 1? 'Online' : 'Offline' }}
+                                {{ $feeder->status ? 'Online' : 'Offline' }}
+                                {{ $feeder->status }}
                             </span>
 
                             <svg :class="expanded === {{ $feeder->id }} ? 'rotate-180' : ''"
