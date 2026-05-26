@@ -51,8 +51,8 @@
                             </div>
 
                             <span
-                                class="text-xs sm:text-sm font-semibold {{ $feeder->status ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $feeder->status ? 'Online' : 'Offline' }}
+                                class="text-xs sm:text-sm font-semibold {{ $feeder->status == 1 ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $feeder->status == 1? 'Online' : 'Offline' }}
                             </span>
 
                             <svg :class="expanded === {{ $feeder->id }} ? 'rotate-180' : ''"

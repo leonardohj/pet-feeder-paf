@@ -22,10 +22,11 @@ class FeederController extends Controller
                 if ($feeder->last_fed_at) {
                     $lastFedAt = \Carbon\Carbon::parse($feeder->last_fed_at);
 
-                    if ($lastFedAt->diffInMinutes(now()) >= 15) {
-                        $feeder->status = 0;
-                        $feeder->save();
-                    }
+                    // if ($lastFedAt->diffInMinutes(now()) >= 15) {
+                    //     $feeder->status = 0;
+                    //     $feeder->save();
+
+                    // }
                 }
             }
 
