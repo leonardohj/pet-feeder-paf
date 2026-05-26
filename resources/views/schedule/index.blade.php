@@ -47,13 +47,12 @@
                         <div class="flex items-center gap-2">
 
                             <div
-                                class="h-3 w-3 rounded-full {{ $feeder->status ? 'bg-green-500 animate-pulse' : 'bg-red-500' }}">
+                                class="h-3 w-3 rounded-full {{ !$feeder->status ? 'bg-green-500 animate-pulse' : 'bg-red-500' }}">
                             </div>
 
                             <span
-                                class="text-xs sm:text-sm font-semibold {{ $feeder->status == 1 ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $feeder->status ? 'Online' : 'Offline' }}
-                                {{ $feeder->status }}
+                                class="text-xs sm:text-sm font-semibold {{ !$feeder->status ? 'text-green-600' : 'text-red-600' }}">
+                                {{ !$feeder->status ? 'Online' : 'Offline' }}
                             </span>
 
                             <svg :class="expanded === {{ $feeder->id }} ? 'rotate-180' : ''"
