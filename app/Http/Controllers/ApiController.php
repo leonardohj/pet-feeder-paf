@@ -99,7 +99,7 @@ class ApiController extends Controller
 
     $feeder->update([
         'last_fed_at' => $validated['date'] . ' ' . $validated['hour'],
-        'status' => 1,
+        'status' => true,
     ]);
 
     return response()->json($feedingLog, 201);

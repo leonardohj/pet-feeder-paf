@@ -21,41 +21,44 @@ return new class extends Migration {
 
             $table->timestamps();
         });
+
+        Schema::create('schedules', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('feeder_id')
+                ->constrained('feeders')
+                ->cascadeOnDelete();
+
+            $table->time('time');
+            $table->integer('quantity');
+            $table->string('type');
+            $table->json('days')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::create('feeding_logs', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('feeder_id')
+                ->constrained('feeders')
+                ->cascadeOnDelete();
+
+            $table->integer('quantity');
+            $table->integer('status'); // consider enum if you have fixed states
+            $table->string('notes')->nullable();
+
+            $table->date('date');
+            $table->time('hour');
+        });
+
     }
 
     public function down(): void
     {
         Schema::dropIfExists('feeders');
+        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('feeding_logs');
     }
 };
 
-
-Schema::create('schedules', function (Blueprint $table) {
-    $table->id();
-
-    $table->foreignId('feeder_id')
-        ->constrained('feeders')
-        ->cascadeOnDelete();
-
-    $table->time('time');
-    $table->integer('quantity');
-    $table->string('type');
-    $table->json('days')->nullable();
-
-    $table->timestamps();
-});
-
-Schema::create('feeding_logs', function (Blueprint $table) {
-    $table->id();
-
-    $table->foreignId('feeder_id')
-        ->constrained('feeders')
-        ->cascadeOnDelete();
-
-    $table->integer('quantity');
-    $table->integer('status'); // consider enum if you have fixed states
-    $table->string('notes')->nullable();
-
-    $table->date('date');
-    $table->time('hour');
-});
