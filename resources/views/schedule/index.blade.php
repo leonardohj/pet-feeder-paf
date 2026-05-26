@@ -96,25 +96,46 @@
                                         </div>
                                 
                                         <div class="text-gray-500">
-                                            Quantidade: {{ $schedule->quantity }}g
+                                            {{__('schedule.quantity')}}: {{ $schedule->quantity }}g
                                         </div>
                                 
                                     </div>
                                 
-                                    <button
-                                        type="button"
-                                        class="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
-                                        @click="openModal(
-                                            {{ $schedule->id }},
-                                            {{ $feeder->id }},
-                                            '{{ $schedule->time }}',
-                                            {{ $schedule->quantity }},
-                                            '{{ $schedule->type }}',
-                                            {{ json_encode($schedule->days) }}
-                                        )"
-                                    >
-                                        Editar
-                                    </button>
+
+                                    <div class="flex items-center gap-3">
+
+                                        <form
+                                            action="{{ route('schedule.destroy', ['schedule' => $schedule->id]) }}"
+                                            method="POST"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+                                    
+                                            <button
+                                                type="submit"
+                                                class="text-red-600 hover:text-red-700 text-sm sm:text-base font-medium"
+                                            >
+                                                {{__('schedule.destroy')}}
+                                            </button>
+                                        </form>
+                                    
+                                        <button
+                                            type="button"
+                                            class="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
+                                            @click="openModal(
+                                                {{ $schedule->id }},
+                                                {{ $feeder->id }},
+                                                '{{ $schedule->time }}',
+                                                {{ $schedule->quantity }},
+                                                '{{ $schedule->type }}',
+                                                {{ json_encode($schedule->days) }}
+                                            )"
+                                        >
+                                        {{__('schedule.edit')}}
+                                        </button>
+                                    
+                                    </div>
+                                    
                                 
                                 </li>
                                 @endforeach

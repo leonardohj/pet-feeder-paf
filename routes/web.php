@@ -104,7 +104,10 @@ Route::middleware(['web', Language::class])->group(function () {
 
         Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])
             ->name('schedule.update');
-            
+
+        Route::delete('/schedule/destroy/{schedule}', [ScheduleController::class, 'destroy'])
+            ->name('schedule.destroy');
+
 
         Route::resource('pets', PetsController::class);
 

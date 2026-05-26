@@ -15,4 +15,6 @@ return [
     'days' => 'Days',
     'search' => 'Search...',
     'manual' => 'Manual, now.',
+    'edit' => 'Edit',
+    'destroy' => 'Delete'
 ];
