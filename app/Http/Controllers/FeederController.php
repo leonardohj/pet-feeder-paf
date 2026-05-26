@@ -14,8 +14,20 @@ class FeederController extends Controller
 {
     public function index()
     {
+
         try {
             $feeders = Feeder::where('id_user', Auth::id())->get();
+
+            foreach ($feeders as $feeder) {
+                if ($feeder->last_fed_at) {
+                    $lastFedAt = \Carbon\Carbon::parse($feeder->last_fed_at);
+
+                    if ($lastFedAt->diffInMinutes(now()) >= 15) {
+                        $feeder->status = 0;
+                        $feeder->save();
+                    }
+                }
+            }
 
             return view('feeder.index', compact('feeders'));
 
@@ -220,7 +232,7 @@ class FeederController extends Controller
             'type' => 'manual',
         ]);
 
-        
+
         return redirect()->route('feeder.show', [
             'feeder_id' => $feeder->id
         ])->with('toast', [

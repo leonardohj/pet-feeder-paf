@@ -70,33 +70,38 @@ class ApiController extends Controller
 
     /**
      * Store feeding log
-     */
-    public function store(Request $request)
-    {
-        $token = $request->bearerToken();
+     */public function store(Request $request)
+{
+    $token = $request->bearerToken();
 
-        $feeder = Feeder::where('device_token', $token)->first();
+    $feeder = Feeder::where('device_token', $token)->first();
 
-        if (!$feeder) {
-            return response()->json([
-                'error' => 'Invalid or missing token'
-            ], 401);
-        }
-
-        $validated = $request->validate([
-            'date' => 'required|string',
-            'hour' => 'required|string',
-            'quantity' => 'required|integer',
-            'status' => 'required|string'
-        ]);
-
-        $validated['id_feeder'] = $feeder->id;
-
-        $feedingLog = FeedingLog::create($validated);
-
-        $feeder->last_fed_at = $validated['date'] . ' ' . $validated['hour'];
-        $feeder->save();
-
-        return response()->json($feedingLog, 201);
+    if (!$feeder) {
+        return response()->json([
+            'error' => 'Invalid or missing token'
+        ], 401);
     }
+
+    $validated = $request->validate([
+        'date' => 'required|string',
+        'hour' => 'required|string',
+        'quantity' => 'required|integer',
+        'status' => 'required|string'
+    ]);
+
+    $feedingLog = FeedingLog::create([
+        'id_feeder' => $feeder->id,
+        'date' => $validated['date'],
+        'hour' => $validated['hour'],
+        'quantity' => $validated['quantity'],
+        'status' => $validated['status'],
+    ]);
+
+    $feeder->update([
+        'last_fed_at' => $validated['date'] . ' ' . $validated['hour'],
+        'status' => 1,
+    ]);
+
+    return response()->json($feedingLog, 201);
+}
 }

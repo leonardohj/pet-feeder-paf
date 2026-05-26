@@ -22,18 +22,29 @@ class ScheduleController extends Controller
             6 => __('days.saturday'),
             7 => __('days.sunday'),
         ];
-
+    
         try {
             $query = Feeder::where('id_user', Auth::id());
-
+    
             if ($request->filled('search')) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             }
-
+    
             $feeders = $query->with('schedules')->get();
-
+    
+            foreach ($feeders as $feeder) {
+                if ($feeder->last_fed_at) {
+                    $lastFedAt = \Carbon\Carbon::parse($feeder->last_fed_at);
+    
+                    if ($lastFedAt->diffInMinutes(now()) >= 15) {
+                        $feeder->status = 0;
+                        $feeder->save();
+                    }
+                }
+            }
+    
             return view('schedule.index', compact('feeders', 'days'));
-
+    
         } catch (Throwable $e) {
             return redirect()->back()->with('toast', [
                 'type' => 'error',
