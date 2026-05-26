@@ -93,6 +93,8 @@ Route::middleware(['web', Language::class])->group(function () {
             ->name('feeder.linkUser');
         Route::post('/feeder/update/{feeder_id}', [FeederController::class, 'update'])
             ->name('feeder.update');
+        Route::post('/feeder/feedManually/{feeder}', [FeederController::class, 'feedManually'])
+            ->name('feeder.feed_manualy');
 
         Route::get('/schedule', [ScheduleController::class, 'index'])
             ->name('schedule');
@@ -102,6 +104,7 @@ Route::middleware(['web', Language::class])->group(function () {
 
         Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])
             ->name('schedule.update');
+            
 
         Route::resource('pets', PetsController::class);
 

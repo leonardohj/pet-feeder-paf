@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Feeder;
+use App\Models\Schedule;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -19,13 +21,13 @@ class FeederController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Failed to load feeders.',
             ]);
         }
     }
-    
+
     public function store(Request $request)
     {
         try {
@@ -37,19 +39,19 @@ class FeederController extends Controller
                 'status' => false,
                 'device_token' => Str::random(60)
             ];
-            
+
             Feeder::create($data);
 
             return redirect()->back()->with('toast', [
-                'type'    => 'success',
-                'title'   => 'Feeders',
+                'type' => 'success',
+                'title' => 'Feeders',
                 'message' => 'Feeder was created sucessfully.',
             ]);
 
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Failed to create feeder.',
             ]);
         }
@@ -74,8 +76,8 @@ class FeederController extends Controller
             }
 
             return redirect()->back()->with('toast', [
-                'type'    => 'success',
-                'title'   => 'Linked Feeder',
+                'type' => 'success',
+                'title' => 'Linked Feeder',
                 'message' => 'Feeder was linked sucessfully.',
             ]);
 
@@ -84,8 +86,8 @@ class FeederController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Linked Feeder',
+                'type' => 'error',
+                'title' => 'Linked Feeder',
                 'message' => 'Failed to link feeder.',
             ]);
         }
@@ -94,14 +96,16 @@ class FeederController extends Controller
     public function show(Request $request, $feeder_id)
     {
         try {
-            $feeder = Feeder::with(['feedingLogs' => function ($query) {
-                $query->orderBy('date', 'desc');
-            }])
-            ->where('id', $feeder_id)
-            ->when(auth()->user()->getRole() !== 'admin', function ($query) {
-                $query->where('id_user', Auth::id());
-            })
-            ->firstOrFail();
+            $feeder = Feeder::with([
+                'feedingLogs' => function ($query) {
+                    $query->orderBy('date', 'desc');
+                }
+            ])
+                ->where('id', $feeder_id)
+                ->when(auth()->user()->getRole() !== 'admin', function ($query) {
+                    $query->where('id_user', Auth::id());
+                })
+                ->firstOrFail();
 
             $way = 'show';
 
@@ -109,14 +113,14 @@ class FeederController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return redirect()->route('feeder.index')->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Feeder not found or not yours.',
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Something went wrong.',
             ]);
         }
@@ -125,14 +129,16 @@ class FeederController extends Controller
     public function edit(Request $request, $feeder_id)
     {
         try {
-            $feeder = Feeder::with(['feedingLogs' => function ($query) {
-                $query->orderBy('date', 'desc');
-            }])
-            ->where('id', $feeder_id)
-            ->when(auth()->user()->getRole() !== 'admin', function ($query) {
-                $query->where('id_user', Auth::id());
-            })
-            ->firstOrFail();
+            $feeder = Feeder::with([
+                'feedingLogs' => function ($query) {
+                    $query->orderBy('date', 'desc');
+                }
+            ])
+                ->where('id', $feeder_id)
+                ->when(auth()->user()->getRole() !== 'admin', function ($query) {
+                    $query->where('id_user', Auth::id());
+                })
+                ->firstOrFail();
 
             $way = 'edit';
 
@@ -140,14 +146,14 @@ class FeederController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return redirect()->route('feeder.index')->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Feeder not found or not yours.',
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Something went wrong.',
             ]);
         }
@@ -157,7 +163,7 @@ class FeederController extends Controller
     {
         try {
             $feeder = Feeder::findOrFail($feeder_id);
-    
+
             if (auth()->user()->getRole() !== 'admin') {
                 $validated = $request->validate([
                     'name' => 'required|string',
@@ -169,21 +175,21 @@ class FeederController extends Controller
                     'code' => 'nullable|string'
                 ]);
             }
-    
+
             $feeder->update($validated);
-    
+
             return redirect()->route('feeder.show', [
                 'feeder_id' => $feeder->id
             ])->with('toast', [
-                'type'    => 'success',
-                'title'   => 'Feeders',
-                'message' => 'Feeder updated sucessfully.',
-            ]);
-    
+                        'type' => 'success',
+                        'title' => 'Feeders',
+                        'message' => 'Feeder updated sucessfully.',
+                    ]);
+
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Feeder not found.',
             ]);
 
@@ -192,10 +198,36 @@ class FeederController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', [
-                'type'    => 'error',
-                'title'   => 'Feeders',
+                'type' => 'error',
+                'title' => 'Feeders',
                 'message' => 'Something went wrong.',
             ]);
         }
+    }
+    public function feedManually(Feeder $feeder, Request $request)
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:50',
+        ]);
+
+
+
+
+        Schedule::create([
+            'feeder_id' => $feeder->id,
+            'time' => Carbon::now()->format('H:i'),
+            'quantity' => $request->input('quantity'),
+            'type' => 'manual',
+        ]);
+
+        
+        return redirect()->route('feeder.show', [
+            'feeder_id' => $feeder->id
+        ])->with('toast', [
+                    'type' => 'success',
+                    'title' => 'Feeders',
+                    'message' => 'Feeder feeded manually sucessfully.',
+                ]);
+
     }
 }

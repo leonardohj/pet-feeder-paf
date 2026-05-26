@@ -8,6 +8,7 @@
 
 @section('body')
     <x-card>
+        
         <form method="GET" action="{{ route('schedule') }}">
             <x-search name="search" label="{{ __('schedule.search_feeders') }}" :placeholder="__('schedule.search')" :value="request('search')">
                 @if (request('search'))
@@ -78,18 +79,20 @@
                                 <li class="flex justify-between items-center">
 
                                     <div class="text-sm sm:text-base">
-                                        
                                         <div class="font-medium">
                                             {{ $schedule->time }} —
                                             {{ $schedule->type === 'always'
-                                                ? 'Todos os dias'
+                                            ?  __('schedule.all_days')
+                                            : ($schedule->type === 'manual'
+                                                ? __('schedule.manual')
                                                 : implode(', ',
                                                     array_map(
                                                         fn($day) => $day,
-                                                        array_intersect_key($days, array_flip($schedule->days))
+                                                        array_intersect_key($days, array_flip($schedule->days ?? []))
                                                     )
                                                 )
-                                            }}
+                                            )
+                                        }}
                                         </div>
                                 
                                         <div class="text-gray-500">
@@ -171,7 +174,7 @@
 
 
                     <div class="mb-4">
-                        <x-input type="number" name="quantity" x-model="quantity" required min="50"
+                        <x-input type="number" name="quantity" x-model="quantity" required min="15"
                             :label="__('schedule.quantity')"></x-input>
                     </div>
 

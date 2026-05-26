@@ -13,5 +13,6 @@ return [
     'all_days' => 'Todos os Dias',
     'specific_days' => 'Dias Específicos',
     'days' => 'Dias',
-    'search' => 'Pesquisar...'
+    'search' => 'Pesquisar...',
+    'manual' => 'Manual, agora.',
 ];

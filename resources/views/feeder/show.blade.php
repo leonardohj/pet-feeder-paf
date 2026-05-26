@@ -8,65 +8,104 @@
 @endsection
 
 @section('body')
-    <div class="space-y-4">
+<div class="space-y-4" x-data="manualFeedModal()" x-cloak>
 
-        <x-card titleSize="3xl">
-            @if ($way === 'edit')
-                <form action="{{ route('feeder.update', ['feeder_id' => $feeder->id]) }}" method="POST">
-                    @csrf
-            @endif
-            <x-show-inputs type="title" :way="$way" name="name" :label="__('feeder.name')"
-                :value="$feeder->name"></x-show-inputs>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <x-card titleSize="3xl">
 
-                <div class="col-span-2 ">
-                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Status</label>
-                    <div class="mt-1">
-                        @if ($feeder->status)
-                            <span
-                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase w-fit">
-                                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                Active
-                            </span>
-                        @else
-                            <span
-                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-xs font-bold uppercase w-fit">
-                                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
-                                Offline
-                            </span>
-                        @endif
-                    </div>
+        @if ($way === 'edit')
+            <form action="{{ route('feeder.update', ['feeder_id' => $feeder->id]) }}" method="POST">
+                @csrf
+        @endif
+
+        <x-show-inputs
+            type="title"
+            :way="$way"
+            name="name"
+            :label="__('feeder.name')"
+            :value="$feeder->name">
+        </x-show-inputs>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+            <div class="col-span-2">
+                <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                </label>
+
+                <div class="mt-1">
+                    @if ($feeder->status)
+                        <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase w-fit">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            Active
+                        </span>
+                    @else
+                        <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-xs font-bold uppercase w-fit">
+                            <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                            Offline
+                        </span>
+                    @endif
                 </div>
-                <x-show-inputs :admin="true" :way="$way" name="device_code" :label="__('feeder.device_code')"
-                    :value="$feeder->code"></x-show-inputs>
-
-                <x-show-inputs name="model" :label="__('feeder.model')" :value="$feeder->pet_type"></x-show-inputs>
-                <x-show-inputs name="last_fed_at" :label="__('feeder.last_fed_at')" :value="$feeder->last_fed_at"></x-show-inputs>
-                <x-show-inputs name="associated_at" :label="__('feeder.associated_at')" :value="$feeder->updated_at"></x-show-inputs>
-                @if (auth()->user()->getRole() == 'admin')
-                    <x-show-inputs :way="$way" name="device_token" :label="__('feeder.device_token')"
-                        :value="$feeder->device_token"></x-show-inputs>
-                @endif
             </div>
-            <div class="mt-2">
-                @if ($way === 'show')
-                    <a href="{{ route('feeder.edit', ['feeder_id' => $feeder->id]) }}">
-                        <x-button>{{ __('feeder.edit_feeder') }}</x-button>
-                    </a>
-                @else
-                    <x-button type="submit">{{ __('feeder.complete') }}</x-button>
-                @endif
 
-            </div>
-            @if ($way === 'edit')
-                </form>
+            <x-show-inputs
+                :admin="true"
+                :way="$way"
+                name="device_code"
+                :label="__('feeder.device_code')"
+                :value="$feeder->code">
+            </x-show-inputs>
+
+            <x-show-inputs
+                name="model"
+                :label="__('feeder.model')"
+                :value="$feeder->pet_type">
+            </x-show-inputs>
+
+            <x-show-inputs
+                name="last_fed_at"
+                :label="__('feeder.last_fed_at')"
+                :value="$feeder->last_fed_at">
+            </x-show-inputs>
+
+            <x-show-inputs
+                name="associated_at"
+                :label="__('feeder.associated_at')"
+                :value="$feeder->updated_at">
+            </x-show-inputs>
+
+            @if (auth()->user()->getRole() == 'admin')
+                <x-show-inputs
+                    :way="$way"
+                    name="device_token"
+                    :label="__('feeder.device_token')"
+                    :value="$feeder->device_token">
+                </x-show-inputs>
             @endif
 
+        </div>
 
+        <div class="mt-2">
 
-        </x-card>
-<div class="m-4">
+            @if ($way === 'show')
+                <a href="{{ route('feeder.edit', ['feeder_id' => $feeder->id]) }}">
+                    <x-button>{{ __('feeder.edit_feeder') }}</x-button>
+                </a>
+            @else
+                <x-button type="submit">
+                    {{ __('feeder.complete') }}
+                </x-button>
+            @endif
 
+        </div>
+
+        @if ($way === 'edit')
+            </form>
+        @endif
+
+    </x-card>
+
+    {{-- HISTORY --}}
+    <div class="m-4">
 
         <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
@@ -84,6 +123,7 @@
                             <th class="px-6 py-2 font-medium text-right">{{ __('dashboard.dose') }}</th>
                         </tr>
                     </thead>
+
                     <tbody class="divide-y divide-gray-50 text-gray-600">
                         @forelse($feeder->feedingLogs(3) as $log)
                             <tr>
@@ -95,6 +135,7 @@
                                         {{ $log->hour }}
                                     </span>
                                 </td>
+
                                 <td class="px-6 py-2 text-right">
                                     <span class="px-2 py-1 bg-indigo-50 text-gray-400 text-xs rounded-md">
                                         {{ $log->quantity }}
@@ -113,10 +154,82 @@
             </div>
 
         </div>
+    </div>
+
+    {{-- MANUAL FEED --}}
+    <x-card class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <x-button type="button" click="openModal()">
+            {{ __('feeder.manually_feed') }}
+        </x-button>
+
+    </x-card>
+
+    {{-- MODAL --}}
+    <div
+        x-show="modalOpen"
+        x-transition
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+
+        <div
+            class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6"
+            @click.away="closeModal()">
+
+            <h2 class="text-xl font-semibold mb-4">
+                {{ __('feeder.manually_feed') }}
+            </h2>
+
+            <form action="{{ route('feeder.feed_manualy', ['feeder' => $feeder]) }}" method="POST">
+                @csrf
+
+                <div class="mb-4">
+                    <x-input
+                        type="number"
+                        name="quantity"
+                        x-model="quantity"
+                        required
+                        min="50"
+                        :label="__('schedule.quantity')" />
+                </div>
+
+                <div class="flex justify-end gap-2 mt-4">
+
+                    <x-button borders="border border-gray-200" color="bg-gray-50 hover:bg-gray-100"
+                    text_color="text-gray-700" type="button" click="closeModal()"
+                    class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
+                    {{ __('index.cancel') }}
+                </x-button>
+
+                    <x-button type="submit">
+                        {{ __('index.save') }}
+                    </x-button>
+
+                </div>
+
+            </form>
+
         </div>
-        <x-card class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <x-button>{{__('feeder.manually_feed')}}</x-button>
-        </x-card>
 
     </div>
+
+</div>
+
+<script>
+function manualFeedModal() {
+    return {
+        modalOpen: false,
+        quantity: '',
+
+        openModal() {
+            this.modalOpen = true;
+        },
+
+        closeModal() {
+            this.modalOpen = false;
+            this.quantity = '';
+        }
+    }
+}
+</script>
+
 @endsection
